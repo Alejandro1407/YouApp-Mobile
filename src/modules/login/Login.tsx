@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
-import {authorize, revoke} from 'react-native-app-auth';
+import {authorize} from 'react-native-app-auth';
 import {Button, StyleSheet, Text, View} from 'react-native';
 import {credentials} from '@youapp/resources/clientRegister';
 import {OAuth2Type} from './enums/OAuth2Type';
 import {OAuth2Configuration} from './enums/OAuth2Configuration';
 import {
   GoogleSignin,
-  GoogleSigninButton,
-  statusCodes
-} from '@react-native-google-signin/google-signin';
+  GoogleSigninButton} from '@react-native-google-signin/google-signin';
 
 export class Login extends Component {
   constructor(props: any) {
@@ -16,16 +14,15 @@ export class Login extends Component {
     this.state = {accessToken: null};
 
     GoogleSignin.configure({
-      //copes: ['openid', 'profile'], // what API you want to access on behalf of the user, default is email and profile
+      scopes: [
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/user.birthday.read',
+        'https://www.googleapis.com/auth/user.gender.read',
+      ],
       webClientId:
-        '594103153319-e0i9iua675j9q6pe27k2oil8ojq3p8oo.apps.googleusercontent.com',
-      offlineAccess: false, // if you want to access Google API on behalf of the user FROM YOUR SERVER 
-      //hostedDomain: '', // specifies a hosted domain restriction
-      //loginHint: '', // [iOS] The user's ID, or email address, to be prefilled in the authentication UI if possible. [See docs here](https://developers.google.com/identity/sign-in/ios/api/interface_g_i_d_sign_in.html#a0a68c7504c31ab0b728432565f6e33fd)
-      //forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
-      //accountName: '', // [Android] specifies an account name on the device that should be used
-      //iosClientId: '<FROM DEVELOPER CONSOLE>', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
-      //googleServicePlistPath: '', // [iOS] optional, if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
+        '594103153319-gm26n3kirsecq2kfl52fsh2p5ejd09qp.apps.googleusercontent.com',
+      offlineAccess: false,
     });
   }
 
@@ -70,9 +67,11 @@ export class Login extends Component {
   async test() {
     try {
       await GoogleSignin.hasPlayServices();
-      console.log("google services are available");
+      console.log('google services are available');
       const userInfo = await GoogleSignin.signIn();
       console.log(userInfo);
+      const dd = await GoogleSignin.getTokens();
+      console.log(dd);
     } catch (err) {
       console.error(err);
     }

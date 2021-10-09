@@ -27,10 +27,6 @@ const credentials: Array<OAuth2Configuration> = [
       redirectUrl:
         'com.googleusercontent.apps.594103153319-e0i9iua675j9q6pe27k2oil8ojq3p8oo:/oauth2redirect/google',
       scopes: ['openid', 'profile'],
-      //additionalHeaders: {
-      //  'User-Agent':
-      //    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.54 Safari/537.36',
-     //},
     },
   },
 ];
