@@ -15,6 +15,12 @@ const AppNavigation = createStackNavigator({
         navigationOptions: {
             headerShown: false,
         }
+    },
+    Principal:{
+        screen: LoginScreen,
+        navigationOptions: {
+            headerShown: false,
+        }
     }
 })
 
