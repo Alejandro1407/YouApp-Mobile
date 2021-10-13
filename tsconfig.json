@@ -3,7 +3,16 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@youapp/*": ["src/*/index", "src/*"]
+      "@/*": ["/*"],
+      "@src/*": ["src/*"],
+      "@app/*": ["src/app/*"],
+      "@assets/*": ["src/assets/*"],
+      "@styles/*": ["src/styles/*"],
+      "@enums/*": ["src/app/enums/*"],
+      "@screens/*": ["src/app/screens/*"],
+      "@models/*": ["src/app/models/*"],
+      "@modules/*": ["src/app/modules/*"],
+      "@environment/*": ["src/app/environment/*"],
     },
     /* Basic Options */
     "target": "esnext",                       /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */

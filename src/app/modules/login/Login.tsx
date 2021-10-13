@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {authorize} from 'react-native-app-auth';
 import {Button, StyleSheet, Text, View} from 'react-native';
-import {credentials} from '@youapp/resources/clientRegister';
-import {OAuth2Type} from './enums/OAuth2Type';
-import {OAuth2Configuration} from './enums/OAuth2Configuration';
+import {OAuth2Credentials} from '@environment/OAuth2Credentials';
+import {OAuth2Type} from '@enums/OAuth2Type';
+import {OAuth2Configuration} from '@models/OAuth2Configuration';
 import {
   GoogleSignin,
   GoogleSigninButton} from '@react-native-google-signin/google-signin';
@@ -27,7 +27,7 @@ export class Login extends Component {
   }
 
   _getConfig(_oauth2Type: OAuth2Type): OAuth2Configuration {
-    const v = credentials.find(x => x.registration === _oauth2Type);
+    const v = OAuth2Credentials.find(x => x.registration === _oauth2Type);
     if (v === undefined) {
       throw new TypeError('Not OAuthConfiguration found?');
     }
