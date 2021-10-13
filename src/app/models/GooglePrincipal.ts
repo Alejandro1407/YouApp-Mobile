@@ -5,4 +5,5 @@ export interface GooglePrincipal {
   givenName: String;
   name: String;
   photo: String;
+  birthday?: Date;
 }
