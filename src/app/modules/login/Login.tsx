@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import {authorize} from 'react-native-app-auth';
-import {Button, StyleSheet, Text, View} from 'react-native';
+import { StatusBar, Image, Button, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 import {OAuth2Credentials} from '@environment/OAuth2Credentials';
 import {OAuth2Type} from '@enums/OAuth2Type';
 import {OAuth2Configuration} from '@models/OAuth2Configuration';
-import {
-  GoogleSignin,
-  GoogleSigninButton} from '@react-native-google-signin/google-signin';
+import { GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
+
+//Styles
+import {loginStyles} from '@styles/General'
+import Colors from '@src/styles/Colors'; '@styles/Colors'
+import LinearGradient from 'react-native-linear-gradient'
 
 export class Login extends Component {
   constructor(props: any) {
@@ -78,33 +81,68 @@ export class Login extends Component {
   }
 
   render() {
+    const start = {x: 0, y: 0};
+    const end = {x: 1, y: 0};
     let loggedIn = this.state.accessToken === null ? false : true;
     return (
-      <View style={this.styles.container}>
-        <Text style={this.styles.header}> Auth0Sample - Login </Text>
-        <Button
-          onPress={() => {
-            loggedIn
-              ? this._onLogout(OAuth2Type.YOUAPP)
-              : this._onLogin(OAuth2Type.YOUAPP);
-          }}
-          title="Log with username and password"
-        />
-        <Button
-          onPress={() => {
-            loggedIn
-              ? this._onLogout(OAuth2Type.GOOGLE)
-              : this._onLogin(OAuth2Type.GOOGLE);
-          }}
-          title="Log with google"
-        />
+      <View style={[loginStyles.container, {padding: 50}]}>
+        <StatusBar backgroundColor={Colors.BACKGROUND} translucent={true}/>
+        <View style={loginStyles.logo}>
+          <Image source={require('@assets/favicon.png')} style={{ height:100, width: 100 }}/>
+          <Text style={loginStyles.txtTittle}>Logueate con tu YouApp Account</Text>
+        </View>
+        <View style={loginStyles.btnMain}>
+          <TouchableOpacity
+            onPress={() => {
+              loggedIn
+                ? this._onLogout(OAuth2Type.YOUAPP)
+                : this._onLogin(OAuth2Type.YOUAPP);
+            }}
+          >
+            <LinearGradient start={start} end={end} 
+              style={{
+                flexDirection: 'row', 
+                padding:15,
+                borderRadius: 60
+              }} 
+              colors={Colors.LINEARGRADIENT1}
+            >
+              <Image source={require('@assets/iniciar-sesion.png')} tintColor={Colors.ACCENT}
+                style={{
+                  width: 32,
+                  height: 32,
+                  marginLeft: 40
+
+                }}
+              />
+              <Text style={loginStyles.btntxt}>Iniciar Sesion</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+        <View style={loginStyles.btnTransparent}>
+          <TouchableOpacity style={{flexDirection: 'row', padding:15}}>
+            <Image source={require('@assets/add.png')}  tintColor={Colors.ACCENT}  
+              style={{
+                width: 32,
+                height: 32,
+                marginLeft: 50
+              }}
+            />
+            <Text style={loginStyles.btntxt}>Registrarse</Text>
+          </TouchableOpacity>
+        </View>
         <GoogleSigninButton
-          style={{width: 192, height: 48}}
+          style={{width: 192, height: 48,}}
           size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
+          color={GoogleSigninButton.Color.Light}
           onPress={this.test}
           disabled={this.state.isSigninInProgress}
         />
+        <View style={{marginTop: 15}}>
+          <TouchableOpacity>
+            <Text style={[loginStyles.txtTransparent, { textDecorationLine: 'underline' }]}>Olvide mi Contraseña</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }

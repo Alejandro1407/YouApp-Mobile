@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {View, StatusBar} from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import {imageBackgroundStyle} from '@styles/General';
+import {splashStyles} from '@styles/General';
+import Colors from '@styles/Colors';
 
 export default class LoginScreen extends Component {
+
   goToScreen(routeName) {
     this.props.navigation.navigate(routeName);
   }
@@ -20,33 +22,47 @@ export default class LoginScreen extends Component {
 
   render() {
     return (
-      <View style={imageBackgroundStyle.image}>
-        <StatusBar translucent backgroundColor="rgba(0,0,0,0.2)" />
+      <View style={splashStyles.image}>
+        <StatusBar backgroundColor={Colors.BACKGROUND} />
         <Animatable.Image
           animation="pulse"
           easing="ease-out"
           iterationCount="infinite"
           style={{
-            width: 200,
-            height: 200,
-            margin: 100,
+            width: 166,
+            height: 166,
+            marginTop: 164,
           }}
           source={require('@assets/favicon.png')}
+
         />
         <Animatable.Text
           animation="pulse"
           easing="ease-out"
           iterationCount="infinite"
           style={{
-            textAlign: 'center',
-            fontSize: 20,
-            fontWeight: '700',
+            fontWeight: "900",
             fontFamily: 'Poppins-Black',
-            marginTop: '-25%',
+            fontSize: 24,
+            color: Colors.PRIMARY,
+            marginTop: 28,
+          }}>
+          YouApp The sound of life
+        </Animatable.Text>
+        <Animatable.Text
+          animation="pulse"
+          easing="ease-out"
+          iterationCount="infinite"
+          style={{
+            fontWeight: "500",
+            fontSize: 18,
+            fontFamily: 'Poppins-Black',
+            color: Colors.GRAY4,
+            marginTop: 8,
           }}>
           Loading...
         </Animatable.Text>
       </View>
-    );
+    )
   }
 }
