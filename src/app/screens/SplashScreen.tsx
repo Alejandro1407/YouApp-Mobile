@@ -4,7 +4,7 @@ import * as Animatable from 'react-native-animatable';
 import {splashStyles} from '@styles/General';
 import Colors from '@styles/Colors';
 
-export default class LoginScreen extends Component {
+export default class SplashScreen extends Component {
 
   goToScreen(routeName) {
     this.props.navigation.navigate(routeName);
