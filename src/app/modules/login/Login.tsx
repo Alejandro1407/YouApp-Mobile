@@ -124,7 +124,9 @@ export class Login extends Component {
           </TouchableOpacity>
         </View>
         <View style={loginStyles.btnTransparent}>
-          <TouchableOpacity style={{flexDirection: 'row', padding:15}}>
+          <TouchableOpacity style={{flexDirection: 'row', padding:15}}
+            onPress={() => {this.goToScreen('Register')}}
+          >
             <Image source={require('@assets/add.png')}  tintColor={Colors.ACCENT}  
               style={{
                 width: 32,
