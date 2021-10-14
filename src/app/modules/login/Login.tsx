@@ -80,6 +80,10 @@ export class Login extends Component {
     }
   }
 
+  goToScreen(routeName) {
+    this.props.navigation.navigate(routeName);
+  }
+
   render() {
     const start = {x: 0, y: 0};
     const end = {x: 1, y: 0};
@@ -131,13 +135,18 @@ export class Login extends Component {
             <Text style={loginStyles.btntxt}>Registrarse</Text>
           </TouchableOpacity>
         </View>
-        <GoogleSigninButton
-          style={{width: 192, height: 48,}}
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Light}
-          onPress={this.test}
-          disabled={this.state.isSigninInProgress}
-        />
+        <View style={loginStyles.btnTransparent}>
+          <TouchableOpacity onPress={this.test} style={{flexDirection: 'row', padding:15}}>
+            <Image source={require('@assets/google.png')}  
+              style={{
+                width: 32,
+                height: 32,
+                marginLeft: 20
+              }}
+            />
+            <Text style={loginStyles.btntxt}>Ingresa con Google</Text>
+          </TouchableOpacity>
+        </View>
         <View style={{marginTop: 15}}>
           <TouchableOpacity>
             <Text style={[loginStyles.txtTransparent, { textDecorationLine: 'underline' }]}>Olvide mi Contraseña</Text>
