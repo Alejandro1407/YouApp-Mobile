@@ -5,6 +5,7 @@ import MyTextInput from "@src/styles/MyTextInput";
 import InputBox from "@src/styles/InputBox";
 import { Icon } from "react-native-elements";
 import colors from "@src/styles/Colors";
+import LinearGradient from 'react-native-linear-gradient';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -132,6 +133,9 @@ export default function RegisterScreen(props:any){
         }
     }
 
+    const start = {x: 0, y: 0};
+    const end = {x: 1, y: 0};
+
     return(
         <>
             <Modal transparent={true} animationType="slide" visible={foto} onRequestClose={() => {
@@ -171,7 +175,7 @@ export default function RegisterScreen(props:any){
             </Modal>
             <ScrollView>
                 <View style={[loginStyles.container, {padding: 50,}]}>
-                    <Text style={{color: 'white', fontSize: 25, marginBottom:25}}>
+                    <Text style={{color: colors.PRIMARY, fontSize: 25, marginBottom:25}}>
                         Crea una cuenta...
                     </Text>
                     <TouchableOpacity onPress={showFoto}>
@@ -200,10 +204,29 @@ export default function RegisterScreen(props:any){
                         onCancel={hideModal}
                         locale='es_ES'
                     />
+                    <View style={loginStyles.btnMain}>
+                        <TouchableOpacity>
+                            <LinearGradient start={start} end={end} 
+                            style={{
+                                flexDirection: 'row', 
+                                padding:15,
+                                borderRadius: 60
+                            }} 
+                            colors={colors.LINEARGRADIENT1}
+                            >
+                                <Image source={require('@assets/add.png')} tintColor={colors.GRAY5}
+                                    style={{
+                                    width: 32,
+                                    height: 32,
+                                    marginLeft: 40
+
+                                    }}
+                                />
+                                <Text style={loginStyles.btntxt}>Registrarse</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <TouchableOpacity>
-                    <Text></Text>
-                </TouchableOpacity>
             </ScrollView>
         </>
     );
