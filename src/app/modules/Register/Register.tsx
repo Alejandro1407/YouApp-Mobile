@@ -17,6 +17,13 @@ export default function RegisterScreen(props:any){
         {fileUri: ''}
     ])
     const [datevisiblity, setDatevisibility] = useState(false);
+    //Datos a enviar
+    const [nombre, setNombre] = useState('');
+    const [apellido, setApellido] = useState('');
+    const [correo, setCorreo] = useState('');
+    const [user, setUser] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordC, setPasswordC] = useState('');
     const [fecha, setFecha] = useState('');
     const {navigation} = props;
     const [foto, setFoto] = useState(false);
@@ -36,7 +43,7 @@ export default function RegisterScreen(props:any){
     }
     const confirmarFecha = date => {
         const opciones = { year: 'numeric', month: 'long', day: "2-digit" };
-        setFecha(date.toLocaleDateString('es-ES', opciones));
+        setFecha(date.toLocaleDateString('en-EN', opciones));
         hideModal();
     };
 
@@ -183,12 +190,12 @@ export default function RegisterScreen(props:any){
                             {profileFoto()}
                         </View>
                     </TouchableOpacity> 
-                    <InputBox keyboardType='default' placeholder='Nombre' image='user' />
-                    <InputBox keyboardType='default' placeholder='Apellido' image='user'/>
-                    <InputBox keyboardType='email-address' placeholder='Correo' image='envelope-o' />
-                    <InputBox keyboardType='default' placeholder='Nombre de usuario' image='user-circle-o' />
-                    <InputBox keyboardType={null} placeholder='Ingrese su contraseña' image='lock' secureTextEntry={true} />
-                    <InputBox keyboardType={null} placeholder='Confirme contraseña' image='lock' secureTextEntry={true} />
+                    <InputBox keyboardType='default' placeholder='Nombre' image='user' onChangeText={(name:string) => setNombre(name)} />
+                    <InputBox keyboardType='default' placeholder='Apellido' image='user' onChangeText={(lastname:string) => setNombre(lastname)}/>
+                    <InputBox keyboardType='email-address' placeholder='Correo' image='envelope-o' onChangeText={(email:string) => setNombre(email)}/>
+                    <InputBox keyboardType='default' placeholder='Nombre de usuario' image='user-circle-o' onChangeText={(userName:string) => setNombre(userName)}/>
+                    <InputBox keyboardType={null} placeholder='Ingrese su contraseña' image='lock' secureTextEntry={true} onChangeText={(pass:string) => setNombre(pass)}/>
+                    <InputBox keyboardType={null} placeholder='Confirme contraseña' image='lock' secureTextEntry={true} onChangeText={(pass2:string) => setNombre(pass2)} />
                     <TouchableOpacity style={{width: 300}} onPress={showModal}>
                         <InputBox
                             editable={false}
