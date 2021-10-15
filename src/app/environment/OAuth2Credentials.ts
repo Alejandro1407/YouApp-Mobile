@@ -9,7 +9,7 @@ const OAuth2Credentials: Array<OAuth2Configuration> = [
       issuer: 'http://auth-server:8083',
       clientId: 'youapp',
       clientAuthMethod: 'post',
-      redirectUrl: 'http://youappmobile/login/code',
+      redirectUrl: 'youapp://oauth',
       scopes: ['openid'],
       clientSecret: '9d[?hr%[Y>w~nV3_',
       additionalParameters: {

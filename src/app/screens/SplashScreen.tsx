@@ -3,9 +3,9 @@ import {View, StatusBar} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import {splashStyles} from '@styles/General';
 import Colors from '@styles/Colors';
+import {Text} from 'react-native-animatable';
 
 export default class SplashScreen extends Component {
-
   goToScreen(routeName) {
     this.props.navigation.navigate(routeName);
   }
@@ -28,26 +28,22 @@ export default class SplashScreen extends Component {
           animation="pulse"
           easing="ease-out"
           iterationCount="infinite"
-          style={{
-            width: 166,
-            height: 166,
-            marginTop: 164,
-          }}
+          style={splashStyles.animated_image}
           source={require('@assets/favicon.png')}
-
         />
         <Animatable.Text
           animation="pulse"
           easing="ease-out"
           iterationCount="infinite"
-          style={{
-            fontWeight: "900",
-            fontFamily: 'Poppins-Black',
-            fontSize: 24,
-            color: Colors.PRIMARY,
-            marginTop: 28,
-          }}>
-          YouApp The sound of life
+          style={splashStyles.animated_text_margin}>
+          YouApp
+        </Animatable.Text>
+        <Animatable.Text
+          animation="pulse"
+          easing="ease-out"
+          iterationCount="infinite"
+          style={splashStyles.animated_text}>
+          The sound of life
         </Animatable.Text>
       </View>
     )

@@ -22,16 +22,20 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
-      <activity
+       <activity
         android:name="net.openid.appauth.RedirectUriReceiverActivity" tools:node="replace">
         <intent-filter>
           <action android:name="android.intent.action.VIEW"/>
           <category android:name="android.intent.category.DEFAULT"/>
           <category android:name="android.intent.category.BROWSABLE"/>
-          <data android:scheme="http"
-                android:host="youappmobile"
-                android:pathPattern=".*"/>
+          <data android:scheme="youapp"
+                android:host="oauth"/>
         </intent-filter>
       </activity>
     </application>
 </manifest>
+
+<!--
+  android:usesCleartextTraffic="true"
+      android:networkSecurityConfig="@xml/network_security_config"
+-->

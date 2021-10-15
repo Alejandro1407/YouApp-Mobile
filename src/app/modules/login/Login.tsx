@@ -1,17 +1,29 @@
 import React, {Component} from 'react';
 import {authorize} from 'react-native-app-auth';
-import { StatusBar, Image, Button, StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import {
+  StatusBar,
+  Image,
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+} from 'react-native';
 import {OAuth2Credentials} from '@environment/OAuth2Credentials';
 import {OAuth2Type} from '@enums/OAuth2Type';
 import {OAuth2Configuration} from '@models/OAuth2Configuration';
-import { GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+} from '@react-native-google-signin/google-signin';
 
 //Styles
 import {loginStyles} from '@styles/General';
-import Colors from '@src/styles/Colors'; '@styles/Colors';
+import Colors from '@src/styles/Colors';
+('@styles/Colors');
 import LinearGradient from 'react-native-linear-gradient';
-import { GoogleAuthorizationRequest } from '@src/app/models/GoogleAuthorizationRequest';
-import { WebClient } from '../web-client/web-client';
+import {GoogleAuthorizationRequest} from '@src/app/models/GoogleAuthorizationRequest';
+import {WebClient} from '../web-client/web-client';
 
 export class Login extends Component {
   constructor(props: any) {
@@ -46,6 +58,7 @@ export class Login extends Component {
       const result = await authorize(_oauth2.configuration);
       this.setState({accessToken: result.accessToken});
       console.log(result.accessToken);
+      this.goToScreen('Home');
     } catch (error) {
       console.log(error);
     }
@@ -111,33 +124,37 @@ export class Login extends Component {
     let loggedIn = this.state.accessToken === null ? false : true;
     return (
       <View style={[loginStyles.container, {padding: 50}]}>
-        <StatusBar backgroundColor={Colors.BACKGROUND} translucent={true}/>
+        <StatusBar backgroundColor={Colors.BACKGROUND} translucent={true} />
         <View style={loginStyles.logo}>
-          <Image source={require('@assets/favicon.png')} style={{ height:100, width: 100 }}/>
-          <Text style={loginStyles.txtTittle}>Logueate con tu YouApp Account</Text>
+          <Image
+            source={require('@assets/favicon.png')}
+            style={{height: 100, width: 100}}
+          />
+          <Text style={loginStyles.txtTittle}>
+            Iniciar Sesión
+          </Text>
         </View>
         <View style={loginStyles.btnMain}>
           <TouchableOpacity
             onPress={() => {
-              loggedIn
-                ? this._onLogout(OAuth2Type.YOUAPP)
-                : this._onLogin(OAuth2Type.YOUAPP);
-            }}
-          >
-            <LinearGradient start={start} end={end} 
+              this._onLogin(OAuth2Type.YOUAPP);
+            }}>
+            <LinearGradient
+              start={start}
+              end={end}
               style={{
-                flexDirection: 'row', 
-                padding:15,
-                borderRadius: 60
-              }} 
-              colors={Colors.LINEARGRADIENT1}
-            >
-              <Image source={require('@assets/iniciar-sesion.png')} tintColor={Colors.ACCENT}
+                flexDirection: 'row',
+                padding: 15,
+                borderRadius: 60,
+              }}
+              colors={Colors.LINEARGRADIENT1}>
+              <Image
+                source={require('@assets/iniciar-sesion.png')}
+                tintColor={Colors.ACCENT}
                 style={{
                   width: 32,
                   height: 32,
-                  marginLeft: 40
-
+                  marginLeft: 40,
                 }}
               />
               <Text style={loginStyles.btntxt}>Iniciar Sesion</Text>
@@ -145,26 +162,35 @@ export class Login extends Component {
           </TouchableOpacity>
         </View>
         <View style={loginStyles.btnTransparent}>
-          <TouchableOpacity style={{flexDirection: 'row', padding:15}}
-            onPress={() => {this.goToScreen('Register');}}
-          >
-            <Image source={require('@assets/add.png')}  tintColor={Colors.ACCENT}  
+          <TouchableOpacity
+            style={{flexDirection: 'row', padding: 15}}
+            onPress={() => {
+              this.goToScreen('Register');
+            }}>
+            <Image
+              source={require('@assets/add.png')}
+              tintColor={Colors.ACCENT}
               style={{
                 width: 32,
                 height: 32,
-                marginLeft: 50
+                marginLeft: 50,
               }}
             />
             <Text style={loginStyles.btntxt}>Registrarse</Text>
           </TouchableOpacity>
         </View>
         <View style={loginStyles.btnTransparent}>
-          <TouchableOpacity onPress={() => {this.google_oauth()}} style={{flexDirection: 'row', padding:15}}>
-            <Image source={require('@assets/google.png')}  
+          <TouchableOpacity
+            onPress={() => {
+              this.google_oauth();
+            }}
+            style={{flexDirection: 'row', padding: 15}}>
+            <Image
+              source={require('@assets/google.png')}
               style={{
                 width: 32,
                 height: 32,
-                marginLeft: 20
+                marginLeft: 20,
               }}
             />
             <Text style={loginStyles.btntxt}>Ingresa con Google</Text>
@@ -172,7 +198,13 @@ export class Login extends Component {
         </View>
         <View style={{marginTop: 15}}>
           <TouchableOpacity>
-            <Text style={[loginStyles.txtTransparent, { textDecorationLine: 'underline' }]}>Olvide mi Contraseña</Text>
+            <Text
+              style={[
+                loginStyles.txtTransparent,
+                {textDecorationLine: 'underline'},
+              ]}>
+              Olvide mi Contraseña
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
