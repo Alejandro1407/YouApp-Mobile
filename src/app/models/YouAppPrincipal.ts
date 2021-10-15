@@ -4,6 +4,6 @@ export interface YouAppPrincipal {
   email: String;
   username: String;
   password: String;
-  birthday: Date;
+  birthday: String;
   photo: String;
 }
