@@ -7,15 +7,17 @@ import {OAuth2Configuration} from '@models/OAuth2Configuration';
 import { GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
 
 //Styles
-import {loginStyles} from '@styles/General'
-import Colors from '@src/styles/Colors'; '@styles/Colors'
-import LinearGradient from 'react-native-linear-gradient'
+import {loginStyles} from '@styles/General';
+import Colors from '@src/styles/Colors'; '@styles/Colors';
+import LinearGradient from 'react-native-linear-gradient';
+import { GoogleAuthorizationRequest } from '@src/app/models/GoogleAuthorizationRequest';
+import { WebClient } from '../web-client/web-client';
 
 export class Login extends Component {
   constructor(props: any) {
     super(props);
     this.state = {accessToken: null};
-
+    this.register_google = this.register_google.bind(this);
     GoogleSignin.configure({
       scopes: [
         'https://www.googleapis.com/auth/userinfo.profile',
@@ -67,16 +69,35 @@ export class Login extends Component {
     }
   };
 
-  async test() {
+  async google_oauth() {
     try {
       await GoogleSignin.hasPlayServices();
-      console.log('google services are available');
       const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
-      const dd = await GoogleSignin.getTokens();
-      console.log(dd);
+      const tokens = await GoogleSignin.getTokens();
+      //console.log(tokens);
+      var auth: GoogleAuthorizationRequest = {
+        idToken: tokens.idToken,
+        accessToken: tokens.accessToken,
+        principal: userInfo.user,
+      };
+      //console.log(auth);
+      await this.register_google(auth);
     } catch (err) {
       console.error(err);
+    }
+  }
+
+  async register_google(request: GoogleAuthorizationRequest) {
+    try {
+      let promise = await WebClient.getInstance().post(
+        'http://auth-server:8083/v1/auth/google',
+        JSON.stringify(request),
+      );
+      let json = await promise.json();
+      console.log(json);
+      this.goToScreen('Home');
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -125,7 +146,7 @@ export class Login extends Component {
         </View>
         <View style={loginStyles.btnTransparent}>
           <TouchableOpacity style={{flexDirection: 'row', padding:15}}
-            onPress={() => {this.goToScreen('Register')}}
+            onPress={() => {this.goToScreen('Register');}}
           >
             <Image source={require('@assets/add.png')}  tintColor={Colors.ACCENT}  
               style={{
@@ -138,7 +159,7 @@ export class Login extends Component {
           </TouchableOpacity>
         </View>
         <View style={loginStyles.btnTransparent}>
-          <TouchableOpacity onPress={this.test} style={{flexDirection: 'row', padding:15}}>
+          <TouchableOpacity onPress={() => {this.google_oauth()}} style={{flexDirection: 'row', padding:15}}>
             <Image source={require('@assets/google.png')}  
               style={{
                 width: 32,

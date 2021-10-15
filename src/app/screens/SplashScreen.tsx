@@ -49,19 +49,6 @@ export default class SplashScreen extends Component {
           }}>
           YouApp The sound of life
         </Animatable.Text>
-        <Animatable.Text
-          animation="pulse"
-          easing="ease-out"
-          iterationCount="infinite"
-          style={{
-            fontWeight: "500",
-            fontSize: 18,
-            fontFamily: 'Poppins-Black',
-            color: Colors.GRAY4,
-            marginTop: 8,
-          }}>
-          Loading...
-        </Animatable.Text>
       </View>
     )
   }

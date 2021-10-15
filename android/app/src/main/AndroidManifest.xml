@@ -30,7 +30,7 @@
           <category android:name="android.intent.category.BROWSABLE"/>
           <data android:scheme="http"
                 android:host="youappmobile"
-                android:path="/login/code"/>
+                android:pathPattern=".*"/>
         </intent-filter>
       </activity>
     </application>
