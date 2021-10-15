@@ -1,7 +1,8 @@
 import React, { Component, useState } from "react";
-import { Text, View, TouchableOpacity, StatusBar, Image, Button, StyleSheet, Modal} from "react-native";
+import { Text, TextInput, View, TouchableOpacity, StatusBar, Image, Button, StyleSheet, Modal, ScrollView} from "react-native";
 import { loginStyles } from "@src/styles/General";
 import MyTextInput from "@src/styles/MyTextInput";
+import InputBox from "@src/styles/InputBox";
 import { Icon } from "react-native-elements";
 import colors from "@src/styles/Colors";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -102,7 +103,7 @@ export default function RegisterScreen(props:any){
     const profileFoto = () => {
         if(!profile){
             return(
-                <Icon name='user-circle' color={colors.GRAY1} type='font-awesome' size={100}/>
+                <Icon name='user-circle' color={colors.ACCENT} type='font-awesome' size={100}/>
             );
         }
         else{
@@ -168,35 +169,42 @@ export default function RegisterScreen(props:any){
                     </View>
                 </View>
             </Modal>
-            <View style={[loginStyles.container, {padding: 50}]}>
-                <Text style={{color: 'white', fontSize: 25, marginBottom:25}}>
-                    Crea una cuenta...
-                </Text>
-                <TouchableOpacity onPress={showFoto}>
-                    <View>
-                        {profileFoto()}
-                    </View>
-                </TouchableOpacity> 
-                <MyTextInput keyboardType='default' placeholder='Nombre' image='user' />
-                <MyTextInput keyboardType='default' placeholder='Apellido' image='user'/>
-                <MyTextInput keyboardType='email-address' placeholder='Correo' image='envelope-o' />
-                <MyTextInput keyboardType='default' placeholder='Nombre de usuario' image='user-circle-o' />
-                <TouchableOpacity style={{width: 300}} onPress={showModal}>
-                    <MyTextInput
-                        editable={false}
-                        placeholder='Fecha de nacimiento'
-                        image='calendar'
-                        value={fecha}
+            <ScrollView>
+                <View style={[loginStyles.container, {padding: 50,}]}>
+                    <Text style={{color: 'white', fontSize: 25, marginBottom:25}}>
+                        Crea una cuenta...
+                    </Text>
+                    <TouchableOpacity onPress={showFoto}>
+                        <View>
+                            {profileFoto()}
+                        </View>
+                    </TouchableOpacity> 
+                    <InputBox keyboardType='default' placeholder='Nombre' image='user' />
+                    <InputBox keyboardType='default' placeholder='Apellido' image='user'/>
+                    <InputBox keyboardType='email-address' placeholder='Correo' image='envelope-o' />
+                    <InputBox keyboardType='default' placeholder='Nombre de usuario' image='user-circle-o' />
+                    <InputBox keyboardType={null} placeholder='Ingrese su contraseña' image='lock' secureTextEntry={true} />
+                    <InputBox keyboardType={null} placeholder='Confirme contraseña' image='lock' secureTextEntry={true} />
+                    <TouchableOpacity style={{width: 300}} onPress={showModal}>
+                        <InputBox
+                            editable={false}
+                            placeholder='Fecha de nacimiento'
+                            image='calendar'
+                            value={fecha}
+                        />
+                    </TouchableOpacity>
+                    <DateTimePickerModal
+                        isVisible={datevisiblity}
+                        mode="date"
+                        onConfirm={confirmarFecha}
+                        onCancel={hideModal}
+                        locale='es_ES'
                     />
+                </View>
+                <TouchableOpacity>
+                    <Text></Text>
                 </TouchableOpacity>
-                <DateTimePickerModal
-                    isVisible={datevisiblity}
-                    mode="date"
-                    onConfirm={confirmarFecha}
-                    onCancel={hideModal}
-                    locale='es_ES'
-                />
-            </View>
+            </ScrollView>
         </>
     );
 }

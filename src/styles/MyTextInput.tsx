@@ -9,10 +9,8 @@ export default function MyTextInput(props:any){
         <Input
             style={{
                 alignItems: 'center',
-                borderBottomColor: colors.ACCENT,
-                borderBottomWidth: 2,
             }}
-            containerStyle={{marginBottom: 10}}
+            containerStyle={{marginBottom: 10,}}
             inputStyle={{
                 fontSize: 18,
                 paddingVertical: 10,
@@ -20,17 +18,20 @@ export default function MyTextInput(props:any){
                 marginTop: 12,
                 color: colors.ACCENT,
                 fontFamily: "Poppins-Light",
+                borderBottomColor: colors.ACCENT,
             }}
             placeholderTextColor={colors.ACCENT}
             placeholder={props.placeholder}
-            leftIconContainerStyle={{marginLeft: 0}}
+            leftIconContainerStyle={{marginLeft: 0,}}
             leftIcon={<Icon size={24} color={colors.ACCENT} type='font-awesome' name={props.image}/>}
-            rightIcon={props.bolgone?
-            <TouchableOpacity activeOpacity={ 0.8 } style={styles.btnVisibility} onPress={props.onPress}>
-                <Image style={styles.btnImage} tintColor={colors.ACCENT}
-                source={ (props.secureTextEntry) ? require('@src/assets/eye.png') : require('@src/assets/invisible.png')}/>
-            </TouchableOpacity>:
-            <Icon size={24} color={colors.GRAY2} type={'font-awesome'} name={props.imageRight}/>}
+            rightIcon={
+                props.bolgone?
+                <TouchableOpacity activeOpacity={ 0.8 } style={styles.btnVisibility} onPress={props.onPress}>
+                    <Image style={styles.btnImage} tintColor={colors.ACCENT}
+                    source={ (props.secureTextEntry) ? require('@src/assets/eye.png') : require('@src/assets/invisible.png')}/>
+                </TouchableOpacity>:
+                <Icon size={24} color={colors.GRAY2} type={'font-awesome'} name={props.imageRight}/>
+            }
             errorStyle={{color: colors.GRAY2}}
             errorMessage={(props.bolError)?props.strError:''}
             editable={props.editable}
