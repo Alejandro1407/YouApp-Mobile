@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {
   Text,
@@ -15,7 +16,12 @@ import colors from '@src/styles/Colors';
 import LinearGradient from 'react-native-linear-gradient';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {
+  CameraOptions,
+  ImageLibraryOptions,
+  launchCamera,
+  launchImageLibrary,
+} from 'react-native-image-picker';
 import {YouAppPrincipal} from '@src/app/models/YouAppPrincipal';
 import {WebClient} from '../web-client/web-client';
 
@@ -34,9 +40,11 @@ export default function RegisterScreen(props: any) {
   const [password, setPassword] = useState('');
   const [passwordC, setPasswordC] = useState('');
   const [fecha, setFecha] = useState('');
+  const [base64Photo,setBase64Photo] = useState('');
   const {navigation} = props;
   const [foto, setFoto] = useState(false);
   const [profile, setProfile] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState(false);
 
   const showFoto = () => {
     setFoto(true);
@@ -51,21 +59,21 @@ export default function RegisterScreen(props: any) {
     setDatevisibility(false);
   };
   const confirmarFecha = date => {
-    const opciones = {year: 'numeric', month: 'long', day: '2-digit'};
     setFecha(date.toISOString().split('T')[0]);
     hideModal();
   };
 
   const register = () => {
     let payload: YouAppPrincipal = {
-      nombres: '',
-      apellidos: '',
-      email: '',
+      nombres: nombre,
+      apellidos: apellido,
+      email: correo,
       birthday: fecha,
-      password: '',
-      photo: '',
-      username: '',
+      password: password,
+      photo: selectedPhoto === true ? base64Photo : '',
+      username: user,
     };
+    console.log(payload);
     WebClient.getInstance()
       .post('http://auth-server:8083/v1/auth/register', JSON.stringify(payload))
       .then(response => response.json())
@@ -73,68 +81,58 @@ export default function RegisterScreen(props: any) {
   };
 
   const cameraLaunch = () => {
-    let options = {
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
+    let options: CameraOptions = {
+      mediaType: 'photo',
+      includeBase64: true,
+      saveToPhotos: true,
+      cameraType: 'front',
+      quality: 0.5,
+      maxWidth: 200,
+      maxHeight: 200,
     };
 
     launchCamera(options, res => {
-      console.log('Response = ', res);
       if (res.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (res.error) {
-        console.log('ImagePicker Error: ', res.error);
-      } else if (res.customButton) {
-        console.log('User tapped custom button: ', res.customButton);
-        alert(res.customButton);
+        console.warn('Image capture has been cancelled');
       } else {
-        const source = {uri: res.uri};
-        console.log('response', JSON.stringify(res));
         setState({
-          filePath: res,
-          fileData: res.data,
+          filePath: res.assets[0].fileName,
+          base64: res.assets[0].base64,
           fileUri: res.assets[0].uri,
         });
+        setBase64Photo(res.assets[0].base64);
         setProfile(true);
       }
     });
   };
 
   const imageGalleryLaunch = () => {
-    let options = {
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
+    let options: ImageLibraryOptions = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: true,
+      quality: 0.5,
+      maxWidth: 200,
+      maxHeight: 200,
     };
 
     launchImageLibrary(options, res => {
-      console.log('Response = ', res);
       if (res.didCancel) {
         console.log('User cancelled image picker');
-      } else if (res.error) {
-        console.log('ImagePicker Error: ', res.error);
-      } else if (res.customButton) {
-        console.log('User tapped custom button: ', res.customButton);
-        alert(res.customButton);
       } else {
-        const source = {uri: res.assets[0].uri};
-        console.log('response', JSON.stringify(res));
         setState({
-          filePath: res,
-          fileData: res.data,
+          filePath: res.assets[0].fileName,
+          base64: res.assets[0].base64,
           fileUri: res.assets[0].uri,
         });
+        setBase64Photo(res.assets[0].base64);
         setProfile(true);
-        console.log('La imagen es ' + res.assets[0].data);
       }
     });
   };
 
   const profileFoto = () => {
-    if (!profile) {
+    if (!selectedPhoto) {
       return (
         <Icon
           name="user-circle"
@@ -178,13 +176,7 @@ export default function RegisterScreen(props: any) {
 
   return (
     <>
-      <Modal
-        transparent={true}
-        animationType="slide"
-        visible={foto}
-        onRequestClose={() => {
-          alert('Modal has been closed.');
-        }}>
+      <Modal transparent={true} animationType="slide" visible={foto}>
         <View style={styles.vistaModal}>
           <View style={styles.Modal}>
             <Text style={styles.titulo}>Cambiar foto de perfil</Text>
@@ -207,7 +199,7 @@ export default function RegisterScreen(props: any) {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  setProfile(true);
+                  setSelectedPhoto(true);
                   hideFoto();
                 }}
                 style={styles.button3}>
@@ -229,39 +221,45 @@ export default function RegisterScreen(props: any) {
             keyboardType="default"
             placeholder="Nombre"
             image="user"
+            value={nombre}
             onChangeText={(name: string) => setNombre(name)}
           />
           <InputBox
             keyboardType="default"
             placeholder="Apellido"
             image="user"
-            onChangeText={(lastname: string) => setNombre(lastname)}
+            value={apellido}
+            onChangeText={(lastname: string) => setApellido(lastname)}
           />
           <InputBox
             keyboardType="email-address"
             placeholder="Correo"
             image="envelope-o"
-            onChangeText={(email: string) => setNombre(email)}
+            value={correo}
+            onChangeText={(email: string) => setCorreo(email)}
           />
           <InputBox
             keyboardType="default"
             placeholder="Nombre de usuario"
             image="user-circle-o"
-            onChangeText={(userName: string) => setNombre(userName)}
+            value={user}
+            onChangeText={(userName: string) => setUser(userName)}
           />
           <InputBox
             keyboardType={null}
             placeholder="Ingrese su contraseña"
             image="lock"
             secureTextEntry={true}
-            onChangeText={(pass: string) => setNombre(pass)}
+            value={password}
+            onChangeText={(pass: string) => setPassword(pass)}
           />
           <InputBox
             keyboardType={null}
             placeholder="Confirme contraseña"
             image="lock"
             secureTextEntry={true}
-            onChangeText={(pass2: string) => setNombre(pass2)}
+            value={passwordC}
+            onChangeText={(pass2: string) => setPasswordC(pass2)}
           />
           <TouchableOpacity style={{width: 300}} onPress={showModal}>
             <InputBox
@@ -279,7 +277,7 @@ export default function RegisterScreen(props: any) {
             locale="es_ES"
           />
           <View style={loginStyles.btnMain}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={register}>
               <LinearGradient
                 start={start}
                 end={end}
