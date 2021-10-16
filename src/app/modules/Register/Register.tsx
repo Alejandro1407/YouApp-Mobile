@@ -9,7 +9,7 @@ import {
   Modal,
   ScrollView,
 } from 'react-native';
-import {loginStyles} from '@src/styles/General';
+import {loginStyles, modalStyles} from '@src/styles/General';
 import InputBox from '@src/styles/InputBox';
 import {Icon} from 'react-native-elements';
 import colors from '@src/styles/Colors';
@@ -180,208 +180,135 @@ export default function RegisterScreen(props: any) {
 
   return (
     <>
-      <Modal transparent={true} animationType="slide" visible={foto}>
-        <View style={styles.vistaModal}>
-          <View style={styles.Modal}>
-            <Text style={styles.titulo}>Cambiar foto de perfil</Text>
-            <View style={{alignItems: 'center', margin: 25, width: 200}}>
-              {chosseFoto()}
+        <Modal transparent={true} animationType="slide" visible={foto}>
+            <View style={modalStyles.vistaModal}>
+                <View style={modalStyles.Modal}>
+                    <Text style={modalStyles.titulo}>Cambiar foto de perfil</Text>
+                    <View style={{alignItems: 'center', margin: 25, width: 200}}>
+                        {chosseFoto()}
+                    </View>
+                    <TouchableOpacity onPress={cameraLaunch} style={modalStyles.button}>
+                        <Text style={modalStyles.buttonText}>Tomar una foto</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={imageGalleryLaunch}
+                        style={modalStyles.button}
+                    >
+                        <Text style={modalStyles.buttonText}>
+                            Escoger una imagen de la galeria
+                        </Text>
+                    </TouchableOpacity>
+                    <View style={{flexDirection: 'row'}}>
+                        <TouchableOpacity onPress={hideFoto} style={modalStyles.button2}>
+                            <Text style={modalStyles.buttonText}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setSelectedPhoto(true);
+                                hideFoto();
+                            }}
+                            style={modalStyles.button3}
+                        >
+                            <Text style={modalStyles.buttonText}>Guardar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
-            <TouchableOpacity onPress={cameraLaunch} style={styles.button}>
-              <Text style={styles.buttonText}>Tomar una foto</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={imageGalleryLaunch}
-              style={styles.button}>
-              <Text style={styles.buttonText}>
-                Escoger una imagen de la galeria
-              </Text>
-            </TouchableOpacity>
-            <View style={{flexDirection: 'row'}}>
-              <TouchableOpacity onPress={hideFoto} style={styles.button2}>
-                <Text style={styles.buttonText}>Cancelar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setSelectedPhoto(true);
-                  hideFoto();
-                }}
-                style={styles.button3}>
-                <Text style={styles.buttonText}>Guardar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-      <ScrollView>
-        <View style={[loginStyles.container, {padding: 50}]}>
-        <Ionicons name="arrow-back-outline" size={30} color={colors.ACCENT} onPress={() => navigation.navigate('Login')}/>
-          <Text style={{color: colors.PRIMARY, fontSize: 25, marginBottom: 25}}>
-            Crea una cuenta...
-          </Text>
-          <TouchableOpacity onPress={showFoto}>
-            <View>{profileFoto()}</View>
-          </TouchableOpacity>
-          <InputBox
-            keyboardType="default"
-            placeholder="Nombre"
-            image="user"
-            value={nombre}
-            onChangeText={(name: string) => setNombre(name)}
-          />
-          <InputBox
-            keyboardType="default"
-            placeholder="Apellido"
-            image="user"
-            value={apellido}
-            onChangeText={(lastname: string) => setApellido(lastname)}
-          />
-          <InputBox
-            keyboardType="email-address"
-            placeholder="Correo"
-            image="envelope-o"
-            value={correo}
-            onChangeText={(email: string) => setCorreo(email)}
-          />
-          <InputBox
-            keyboardType="default"
-            placeholder="Nombre de usuario"
-            image="user-circle-o"
-            value={user}
-            onChangeText={(userName: string) => setUser(userName)}
-          />
-          <InputBox
-            keyboardType={null}
-            placeholder="Ingrese su contraseña"
-            image="lock"
-            secureTextEntry={true}
-            value={password}
-            onChangeText={(pass: string) => setPassword(pass)}
-          />
-          <InputBox
-            keyboardType={null}
-            placeholder="Confirme contraseña"
-            image="lock"
-            secureTextEntry={true}
-            value={passwordC}
-            onChangeText={(pass2: string) => setPasswordC(pass2)}
-          />
-          <TouchableOpacity style={{width: 300}} onPress={showModal}>
-            <InputBox
-              editable={false}
-              placeholder="Fecha de nacimiento"
-              image="calendar"
-              value={fecha}
-            />
-          </TouchableOpacity>
-          <DateTimePickerModal
-            isVisible={datevisiblity}
-            mode="date"
-            onConfirm={confirmarFecha}
-            onCancel={hideModal}
-            locale="es_ES"
-          />
-          <View style={loginStyles.btnMain}>
-            <TouchableOpacity onPress={register}>
-              <LinearGradient
-                start={start}
-                end={end}
-                style={{
-                  flexDirection: 'row',
-                  padding: 15,
-                  borderRadius: 60,
-                }}
-                colors={colors.LINEARGRADIENT1}>
-                <Image
-                  source={require('@assets/add.png')}
-                  tintColor={colors.GRAY5}
-                  style={{
-                    width: 32,
-                    height: 32,
-                    marginLeft: 40,
-                  }}
+        </Modal>
+        <ScrollView>
+            <View style={[loginStyles.container, {padding: 50}]}>
+                <Text style={{color: colors.PRIMARY, fontSize: 25, marginBottom: 25}}>
+                    Crea una cuenta...
+                </Text>
+                <TouchableOpacity onPress={showFoto}>
+                    <View>{profileFoto()}</View>
+                </TouchableOpacity>
+                <InputBox
+                    keyboardType="default"
+                    placeholder="Nombre"
+                    image="user"
+                    value={nombre}
+                    onChangeText={(name: string) => setNombre(name)}
                 />
-                <Text style={loginStyles.btntxt}>Registrarse</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
+                <InputBox
+                    keyboardType="default"
+                    placeholder="Apellido"
+                    image="user"
+                    value={apellido}
+                    onChangeText={(lastname: string) => setApellido(lastname)}
+                />
+                <InputBox
+                    keyboardType="email-address"
+                    placeholder="Correo"
+                    image="envelope-o"
+                    value={correo}
+                    onChangeText={(email: string) => setCorreo(email)}
+                />
+                <InputBox
+                    keyboardType="default"
+                    placeholder="Nombre de usuario"
+                    image="user-circle-o"
+                    value={user}
+                    onChangeText={(userName: string) => setUser(userName)}
+                />
+                <InputBox
+                    keyboardType={null}
+                    placeholder="Ingrese su contraseña"
+                    image="lock"
+                    secureTextEntry={true}
+                    value={password}
+                    onChangeText={(pass: string) => setPassword(pass)}
+                />
+                <InputBox
+                    keyboardType={null}
+                    placeholder="Confirme contraseña"
+                    image="lock"
+                    secureTextEntry={true}
+                    value={passwordC}
+                    onChangeText={(pass2: string) => setPasswordC(pass2)}
+                />
+                <TouchableOpacity style={{width: 300}} onPress={showModal}>
+                    <InputBox
+                        editable={false}
+                        placeholder="Fecha de nacimiento"
+                        image="calendar"
+                        value={fecha}
+                    />
+                </TouchableOpacity>
+                <DateTimePickerModal
+                isVisible={datevisiblity}
+                mode="date"
+                onConfirm={confirmarFecha}
+                onCancel={hideModal}
+                locale="es_ES"
+                />
+                <View style={loginStyles.btnMain}>
+                    <TouchableOpacity onPress={register}>
+                        <LinearGradient
+                            start={start}
+                            end={end}
+                            style={{
+                            flexDirection: 'row',
+                            padding: 15,
+                            borderRadius: 60,
+                            }}
+                            colors={colors.LINEARGRADIENT1}
+                        >
+                            <Image
+                            source={require('@assets/add.png')}
+                            tintColor={colors.GRAY5}
+                            style={{
+                                width: 32,
+                                height: 32,
+                                marginLeft: 40,
+                            }}
+                            />
+                            <Text style={loginStyles.btntxt}>Registrarse</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </ScrollView>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  label: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginTop: 20,
-    color: colors.GRAY1,
-  },
-  date: {
-    fontSize: 18,
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    marginTop: 12,
-    color: colors.ACCENT,
-    fontFamily: 'Poppins-Light',
-    borderBottomColor: colors.ACCENT,
-    borderBottomWidth: 2,
-  },
-  vistaModal: {
-    backgroundColor: '#000000aa',
-    flex: 1,
-  },
-  Modal: {
-    backgroundColor: colors.BACKGROUND,
-    margin: 50,
-    padding: 40,
-    borderRadius: 10,
-    flex: 1,
-  },
-  button: {
-    width: 250,
-    height: 60,
-    backgroundColor: 'rgba(52, 52, 52, 0)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 12,
-    borderColor: colors.ACCENT,
-    borderWidth: 2,
-    borderRadius: 60,
-  },
-  button2: {
-    width: 100,
-    height: 40,
-    backgroundColor: 'rgba(52, 52, 52, 0)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 12,
-    borderColor: colors.PRIMARY,
-    borderWidth: 2,
-    borderRadius: 60,
-  },
-  button3: {
-    width: 100,
-    height: 40,
-    backgroundColor: 'rgba(52, 52, 52, 0)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 12,
-    borderColor: colors.BORDER,
-    borderWidth: 2,
-    borderRadius: 60,
-  },
-  buttonText: {
-    textAlign: 'center',
-    fontSize: 15,
-    color: '#fff',
-  },
-  titulo: {
-    fontWeight: 'bold',
-    fontSize: 24,
-    marginVertical: 10,
-    width: 250,
-    color: colors.PRIMARY
-  },
-});

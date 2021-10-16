@@ -93,4 +93,63 @@ const loginStyles = StyleSheet.create({
   },
 });
 
-export {loginStyles, splashStyles};
+
+const modalStyles = StyleSheet.create({
+  vistaModal: {
+    backgroundColor: '#000000aa',
+    flex: 1,
+  },
+  Modal: {
+    backgroundColor: Colors.BACKGROUND,
+    margin: 50,
+    padding: 40,
+    borderRadius: 10,
+    flex: 1,
+  },
+  button: {
+    width: 250,
+    height: 60,
+    backgroundColor: 'rgba(52, 52, 52, 0)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+    borderColor: Colors.ACCENT,
+    borderWidth: 2,
+    borderRadius: 60,
+  },
+  button2: {
+    width: 100,
+    height: 40,
+    backgroundColor: 'rgba(52, 52, 52, 0)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 12,
+    borderColor: Colors.PRIMARY,
+    borderWidth: 2,
+    borderRadius: 60,
+  },
+  button3: {
+    width: 100,
+    height: 40,
+    backgroundColor: 'rgba(52, 52, 52, 0)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 12,
+    borderColor: Colors.BORDER,
+    borderWidth: 2,
+    borderRadius: 60,
+  },
+  buttonText: {
+    textAlign: 'center',
+    fontSize: 15,
+    color: '#fff',
+  },
+  titulo: {
+    fontWeight: 'bold',
+    fontSize: 24,
+    marginVertical: 10,
+    width: 250,
+    color: Colors.PRIMARY
+  },
+})
+export {loginStyles, splashStyles, modalStyles};
