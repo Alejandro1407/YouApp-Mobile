@@ -12,10 +12,7 @@ import {
 import {OAuth2Credentials} from '@environment/OAuth2Credentials';
 import {OAuth2Type} from '@enums/OAuth2Type';
 import {OAuth2Configuration} from '@models/OAuth2Configuration';
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 //Styles
 import {loginStyles} from '@styles/General';
@@ -48,6 +45,7 @@ export class Login extends Component {
     if (v === undefined) {
       throw new TypeError('Not OAuthConfiguration found?');
     }
+    console.log(v);
     return v;
   }
 
@@ -85,6 +83,7 @@ export class Login extends Component {
   async google_oauth() {
     try {
       await GoogleSignin.hasPlayServices();
+      console.log('google services are available');
       const userInfo = await GoogleSignin.signIn();
       const tokens = await GoogleSignin.getTokens();
       //console.log(tokens);
