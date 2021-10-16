@@ -10,4 +10,5 @@ export default {
   LINEARGRADIENT1:['#D91193','#22DDF2'],
   LINEARGRADIENT2:['#22DDF2', '#D91193'],
   WHITE: '#F2E1C2',
+  BORDER: '#00CB34'
 };
