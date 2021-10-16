@@ -4,6 +4,7 @@ import SplashScreen from '@screens/SplashScreen';
 import HomeScreen from '@screens/HomeScreen';
 import {Login} from '@modules/login/Login';
 import Register from '../Register/Register';
+import recoverPasswordScreen from '../recoverPassword/recoverPassword';
 
 
 const AppNavigation = createStackNavigator({
@@ -30,7 +31,13 @@ const AppNavigation = createStackNavigator({
     navigationOptions:{
         headerShown: false,
     }
-  }
+  },
+  recoverPassword:{
+    screen: recoverPasswordScreen,
+    navigationOptions:{
+        headerShown: false,
+    }
+  },
 });
 
 export default createAppContainer(AppNavigation);

@@ -2,6 +2,7 @@ import {PathParam} from '@src/app/models/PathParam';
 import {Component} from 'react';
 
 export class WebClient extends Component {
+  
   static getInstance(props?): WebClient {
     return new WebClient(props);
   }
