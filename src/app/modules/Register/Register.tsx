@@ -15,6 +15,7 @@ import {Icon} from 'react-native-elements';
 import colors from '@src/styles/Colors';
 import LinearGradient from 'react-native-linear-gradient';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {
   CameraOptions,
@@ -75,9 +76,12 @@ export default function RegisterScreen(props: any) {
     };
     console.log(payload);
     WebClient.getInstance()
-      .post('http://auth-server:8083/v1/auth/register', JSON.stringify(payload))
-      .then(response => response.json())
-      .then(data => console.log(data));
+        .post('http://auth-server:8083/v1/auth/register', JSON.stringify(payload))
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+        });
+    navigation.navigate('Login');
   };
 
   const cameraLaunch = () => {
@@ -156,7 +160,7 @@ export default function RegisterScreen(props: any) {
       return (
         <Icon
           name="user-circle"
-          color={colors.GRAY1}
+          color={colors.ACCENT}
           type="font-awesome"
           size={200}
         />
@@ -211,6 +215,7 @@ export default function RegisterScreen(props: any) {
       </Modal>
       <ScrollView>
         <View style={[loginStyles.container, {padding: 50}]}>
+        <Ionicons name="arrow-back-outline" size={30} color={colors.ACCENT} onPress={() => navigation.navigate('Login')}/>
           <Text style={{color: colors.PRIMARY, fontSize: 25, marginBottom: 25}}>
             Crea una cuenta...
           </Text>
@@ -328,7 +333,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   Modal: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.BACKGROUND,
     margin: 50,
     padding: 40,
     borderRadius: 10,
@@ -337,29 +342,35 @@ const styles = StyleSheet.create({
   button: {
     width: 250,
     height: 60,
-    backgroundColor: '#3740ff',
+    backgroundColor: 'rgba(52, 52, 52, 0)',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 4,
     marginBottom: 12,
+    borderColor: colors.ACCENT,
+    borderWidth: 2,
+    borderRadius: 60,
   },
   button2: {
     width: 100,
     height: 40,
-    backgroundColor: 'red',
+    backgroundColor: 'rgba(52, 52, 52, 0)',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 4,
     margin: 12,
+    borderColor: colors.PRIMARY,
+    borderWidth: 2,
+    borderRadius: 60,
   },
   button3: {
     width: 100,
     height: 40,
-    backgroundColor: '#00cb34',
+    backgroundColor: 'rgba(52, 52, 52, 0)',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 4,
     margin: 12,
+    borderColor: colors.BORDER,
+    borderWidth: 2,
+    borderRadius: 60,
   },
   buttonText: {
     textAlign: 'center',
@@ -371,5 +382,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginVertical: 10,
     width: 250,
+    color: colors.PRIMARY
   },
 });
