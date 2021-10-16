@@ -75,6 +75,7 @@ export default function RegisterScreen(props: any) {
       username: user,
     };
     console.log(payload);
+    
     WebClient.getInstance()
         .post('http://auth-server:8083/v1/auth/register', JSON.stringify(payload))
         .then(response => response.json())

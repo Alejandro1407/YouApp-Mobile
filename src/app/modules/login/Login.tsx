@@ -197,7 +197,7 @@ export class Login extends Component {
           </TouchableOpacity>
         </View>
         <View style={{marginTop: 15}}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.goToScreen('recoverPassword')}>
             <Text
               style={[
                 loginStyles.txtTransparent,
