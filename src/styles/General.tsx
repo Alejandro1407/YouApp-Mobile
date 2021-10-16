@@ -152,4 +152,113 @@ const modalStyles = StyleSheet.create({
     color: Colors.PRIMARY
   },
 })
-export {loginStyles, splashStyles, modalStyles};
+
+const homeStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.BACKGROUND,
+  },
+
+  Header:{
+    flexDirection:"row",
+    marginTop: 56
+  },
+
+  headerTitle:{
+    fontSize: 28,
+    fontFamily: 'Poppins-Bold',
+    marginLeft: 24,
+    color: Colors.PRIMARY
+  },
+
+  Exit:{
+    marginLeft: '55%',
+    marginTop: 6
+  },
+
+  inputSearch: {
+    flexDirection:"row",
+    backgroundColor: Colors.INPUTSER,
+    borderWidth:2,
+    borderRadius: 50,
+    borderColor: Colors.INPUTSER,
+    marginHorizontal: 24,
+    marginTop: 20,
+    width: 370,
+  },
+
+  iconSearch:{
+    marginTop: 15,
+    marginHorizontal: 17.67,
+  },
+
+  textInput:{
+    color: Colors.GRAY3,
+    fontFamily: 'Poppins-Medium',
+    fontSize: 14,
+    lineHeight: 20,
+    width: 275,
+  },
+
+  playBox:{
+    flexDirection:"row",
+    marginTop: 20
+  },
+
+  playText: {
+    marginLeft:40, 
+    marginRight: 248, 
+    color: Colors.GRAY5, 
+    fontFamily: 'Poppins-Medium', 
+    fontSize: 20,
+  },
+
+  palyArrow:{
+    marginTop: 9
+  },
+  
+  playlistBoxes:{
+    flexDirection:"row",
+    marginTop: 16,
+  },
+
+  playlistTitle:{
+    fontSize: 16, 
+    fontFamily: 'Poppins-SemiBold', 
+    color: Colors.GRAY5, 
+    marginTop: 12,
+  },
+
+  playlistText:{
+    fontSize: 12, 
+    fontFamily: 'Poppins-Medium', 
+    color: Colors.GRAY5, 
+    marginTop: 4,
+  },
+
+  favIcon:{
+    width: 42, 
+    height: 42, 
+    borderRadius: 50,  
+    backgroundColor: 
+    Colors.INPUTSER, 
+    marginLeft:24, 
+    marginRight: 12,
+  },
+
+  favTitle:{    
+    fontSize: 14, 
+    fontFamily: 'Poppins-SemiBold', 
+    color: Colors.GRAY5, 
+    marginTop: 12,
+  },
+
+  favSubTitle: {
+    fontSize: 12, 
+    fontFamily: 'Poppins-Medium', 
+    color: Colors.GRAY5, 
+    marginTop: 4,
+  }
+});
+
+export {loginStyles, splashStyles, modalStyles, homeStyles};
