@@ -190,7 +190,7 @@ export class Login extends Component {
               style={{
                 width: 32,
                 height: 32,
-                marginLeft: 20,
+                marginLeft: 15,
               }}
             />
             <Text style={loginStyles.btntxt}>Ingresa con Google</Text>
