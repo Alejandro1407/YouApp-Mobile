@@ -1,9 +1,9 @@
 export interface GooglePrincipal {
-  id: String;
-  email: String;
-  familyName: String;
-  givenName: String;
-  name: String;
-  photo: String;
+  id: string;
+  name: string | null;
+  email: string;
+  photo: string | null;
+  familyName: string | null;
+  givenName: string | null;
   birthday?: Date;
 }

@@ -1,22 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Modal,
-  ScrollView,
-} from 'react-native';
+import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
 import {loginStyles} from '@src/styles/General';
 import InputBox from '@src/styles/InputBox';
-import {Icon} from 'react-native-elements';
 import colors from '@src/styles/Colors';
 import LinearGradient from 'react-native-linear-gradient';
-import {WebClient} from '../web-client/web-client';
+import {WebClient} from '../web-client/WebClient';
 
 export default function recoverPasswordScreen(props: any) {
+  const web_client: WebClient = new WebClient();
 
   //Datos a enviar
   const [correo, setCorreo] = useState('');
@@ -24,18 +16,12 @@ export default function recoverPasswordScreen(props: any) {
 
   console.log(correo);
 
-  const recoverPassword = (correo:String) => {
-    
-    WebClient.getInstance().get(`http://auth-server:8083/v1/auth/reset-password/${correo}`)
-    .then(response => {
+  const recoverPassword = (correo: String) => {
+    web_client.get(`/v1/auth/reset-password/${correo}`).then(response => {
       console.log(response);
-    })
-
-    navigation.navigate('Login')
-
-  }
-
- 
+    });
+    navigation.navigate('Login');
+  };
 
   return (
     <>
@@ -51,7 +37,7 @@ export default function recoverPasswordScreen(props: any) {
             value={correo}
             onChangeText={(email: string) => setCorreo(email)}
           />
-          
+
           <View style={loginStyles.btnMain}>
             <TouchableOpacity onPress={() => recoverPassword(correo)}>
               <LinearGradient
@@ -61,7 +47,9 @@ export default function recoverPasswordScreen(props: any) {
                   borderRadius: 60,
                 }}
                 colors={colors.LINEARGRADIENT1}>
-                <Text style={[loginStyles.btntxt, {textAlign: 'center'}]}>Recuperar Contraseña</Text>
+                <Text style={[loginStyles.btntxt, {textAlign: 'center'}]}>
+                  Recuperar Contraseña
+                </Text>
               </LinearGradient>
             </TouchableOpacity>
           </View>

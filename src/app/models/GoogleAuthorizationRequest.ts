@@ -1,4 +1,3 @@
-import {User} from '@react-native-google-signin/google-signin';
 import {GooglePrincipal} from './GooglePrincipal';
 
 export interface GoogleAuthorizationRequest {
@@ -6,5 +5,5 @@ export interface GoogleAuthorizationRequest {
   accessToken: String;
   scopes?: Array<String>;
   serverAuthCode?: String;
-  principal: any;
+  principal: GooglePrincipal;
 }

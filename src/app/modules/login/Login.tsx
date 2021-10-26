@@ -1,15 +1,18 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {authorize} from 'react-native-app-auth';
 import {
   StatusBar,
   Image,
-  Button,
-  StyleSheet,
   TouchableOpacity,
   Text,
   View,
+  ToastAndroid,
 } from 'react-native';
-import {OAuth2Credentials} from '@environment/OAuth2Credentials';
+import {
+  OAuth2Credentials,
+  GoogleCredentials,
+} from '@environment/OAuth2Credentials';
 import {OAuth2Type} from '@enums/OAuth2Type';
 import {OAuth2Configuration} from '@models/OAuth2Configuration';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
@@ -20,24 +23,20 @@ import Colors from '@src/styles/Colors';
 ('@styles/Colors');
 import LinearGradient from 'react-native-linear-gradient';
 import {GoogleAuthorizationRequest} from '@src/app/models/GoogleAuthorizationRequest';
-import {WebClient} from '../web-client/web-client';
+import {WebClient} from '@src/app/modules/web-client/WebClient';
+import {OAuth2Context} from '@src/app/environment/OAuth2Context';
 
 export class Login extends Component {
+  private web_client: WebClient;
+
+  static contextType = OAuth2Context;
+  context: React.ContextType<typeof OAuth2Context>;
+
   constructor(props: any) {
     super(props);
-    this.state = {accessToken: null};
+    this.web_client = new WebClient();
     this.register_google = this.register_google.bind(this);
-    GoogleSignin.configure({
-      scopes: [
-        'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/userinfo.email',
-        'https://www.googleapis.com/auth/user.birthday.read',
-        'https://www.googleapis.com/auth/user.gender.read',
-      ],
-      webClientId:
-        '594103153319-gm26n3kirsecq2kfl52fsh2p5ejd09qp.apps.googleusercontent.com',
-      offlineAccess: false,
-    });
+    GoogleSignin.configure(GoogleCredentials);
   }
 
   _getConfig(_oauth2Type: OAuth2Type): OAuth2Configuration {
@@ -45,7 +44,6 @@ export class Login extends Component {
     if (v === undefined) {
       throw new TypeError('Not OAuthConfiguration found?');
     }
-    console.log(v);
     return v;
   }
 
@@ -53,14 +51,24 @@ export class Login extends Component {
     let _oauth2: OAuth2Configuration = this._getConfig(_oauthType);
     console.debug('OAuth Login with:', _oauth2);
     try {
-      const result = await authorize(_oauth2.configuration);
-      this.setState({accessToken: result.accessToken});
-      console.log(result.accessToken);
-      this.goToScreen('Home');
-    } catch (error) {
-      console.log(error);
+      const auth = await authorize(_oauth2.configuration);
+      //console.log(auth);
+      this.context.setAuthorization({
+        access_token: 'access_token',
+        refresh_token: auth.refreshToken,
+        loggedIn: true,
+      });
+      //console.log(this.context.authorization);
+      //this.goToScreen('Home');
+    } catch (ex: unknown) {
+      this._show(ex.message);
+      console.log(ex);
     }
   };
+
+  _show(message: string) {
+    ToastAndroid.show(message, ToastAndroid.SHORT);
+  }
 
   _onLogout = async (_oauthType: OAuth2Type): Promise<void> => {
     let _oauth2: OAuth2Configuration = this._getConfig(_oauthType);
@@ -86,13 +94,11 @@ export class Login extends Component {
       console.log('google services are available');
       const userInfo = await GoogleSignin.signIn();
       const tokens = await GoogleSignin.getTokens();
-      //console.log(tokens);
       var auth: GoogleAuthorizationRequest = {
         idToken: tokens.idToken,
         accessToken: tokens.accessToken,
         principal: userInfo.user,
       };
-      //console.log(auth);
       await this.register_google(auth);
     } catch (err) {
       console.error(err);
@@ -101,8 +107,8 @@ export class Login extends Component {
 
   async register_google(request: GoogleAuthorizationRequest) {
     try {
-      let promise = await WebClient.getInstance().post(
-        'http://auth-server:8083/v1/auth/google',
+      let promise = await this.web_client.post(
+        '/v1/auth/google',
         JSON.stringify(request),
       );
       let json = await promise.json();
@@ -113,14 +119,14 @@ export class Login extends Component {
     }
   }
 
-  goToScreen(routeName) {
+  goToScreen(routeName: string) {
     this.props.navigation.navigate(routeName);
   }
 
   render() {
     const start = {x: 0, y: 0};
     const end = {x: 1, y: 0};
-    let loggedIn = this.state.accessToken === null ? false : true;
+    console.log(this.context);
     return (
       <View style={[loginStyles.container, {padding: 50}]}>
         <StatusBar backgroundColor={Colors.BACKGROUND} translucent={true} />
@@ -129,9 +135,7 @@ export class Login extends Component {
             source={require('@assets/favicon.png')}
             style={{height: 100, width: 100}}
           />
-          <Text style={loginStyles.txtTittle}>
-            Iniciar Sesión
-          </Text>
+          <Text style={loginStyles.txtTittle}>Iniciar Sesión</Text>
         </View>
         <View style={loginStyles.btnMain}>
           <TouchableOpacity
@@ -196,7 +200,7 @@ export class Login extends Component {
           </TouchableOpacity>
         </View>
         <View style={{marginTop: 15}}>
-          <TouchableOpacity onPress={() => this.goToScreen('recoverPassword')}>
+          <TouchableOpacity onPress={() => this.goToScreen('Recover')}>
             <Text
               style={[
                 loginStyles.txtTransparent,
@@ -209,18 +213,4 @@ export class Login extends Component {
       </View>
     );
   }
-
-  private styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#F5FCFF',
-    },
-    header: {
-      fontSize: 20,
-      textAlign: 'center',
-      margin: 10,
-    },
-  });
 }

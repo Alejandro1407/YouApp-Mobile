@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {OAuth2Configuration} from '@models/OAuth2Configuration';
 import {OAuth2Type} from '@enums/OAuth2Type';
+import {ConfigureParams} from '@react-native-google-signin/google-signin/lib/typescript/types';
 
 const OAuth2Credentials: Array<OAuth2Configuration> = [
   {
@@ -19,4 +20,17 @@ const OAuth2Credentials: Array<OAuth2Configuration> = [
     },
   },
 ];
-export {OAuth2Credentials};
+
+const GoogleCredentials: ConfigureParams = {
+  scopes: [
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/user.birthday.read',
+    'https://www.googleapis.com/auth/user.gender.read',
+  ],
+  webClientId:
+    '594103153319-gm26n3kirsecq2kfl52fsh2p5ejd09qp.apps.googleusercontent.com',
+  offlineAccess: false,
+};
+
+export {OAuth2Credentials, GoogleCredentials};

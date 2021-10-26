@@ -39,20 +39,17 @@ const loginStyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.BACKGROUND,
   },
-
   logo: {
     paddingTop: 50,
     alignItems: 'center',
     marginBottom: 40,
   },
-
   txtTittle: {
     marginTop: 15,
     fontSize: 28,
     color: Colors.PRIMARY,
     fontWeight: '900',
   },
-
   btnMain: {
     width: 280,
     marginTop: 40,
@@ -92,7 +89,6 @@ const loginStyles = StyleSheet.create({
     borderRadius: 5,
   },
 });
-
 
 const modalStyles = StyleSheet.create({
   vistaModal: {
@@ -149,9 +145,9 @@ const modalStyles = StyleSheet.create({
     fontSize: 24,
     marginVertical: 10,
     width: 250,
-    color: Colors.PRIMARY
+    color: Colors.PRIMARY,
   },
-})
+});
 
 const homeStyles = StyleSheet.create({
   container: {
@@ -159,27 +155,27 @@ const homeStyles = StyleSheet.create({
     backgroundColor: Colors.BACKGROUND,
   },
 
-  Header:{
-    flexDirection:"row",
-    marginTop: 56
+  Header: {
+    flexDirection: 'row',
+    marginTop: 56,
   },
 
-  headerTitle:{
+  headerTitle: {
     fontSize: 28,
     fontFamily: 'Poppins-Bold',
     marginLeft: 24,
-    color: Colors.PRIMARY
+    color: Colors.PRIMARY,
   },
 
-  Exit:{
+  Exit: {
     marginLeft: '55%',
-    marginTop: 6
+    marginTop: 6,
   },
 
   inputSearch: {
-    flexDirection:"row",
+    flexDirection: 'row',
     backgroundColor: Colors.INPUTSER,
-    borderWidth:2,
+    borderWidth: 2,
     borderRadius: 50,
     borderColor: Colors.INPUTSER,
     marginHorizontal: 24,
@@ -187,12 +183,12 @@ const homeStyles = StyleSheet.create({
     width: 370,
   },
 
-  iconSearch:{
+  iconSearch: {
     marginTop: 15,
     marginHorizontal: 17.67,
   },
 
-  textInput:{
+  textInput: {
     color: Colors.GRAY3,
     fontFamily: 'Poppins-Medium',
     fontSize: 14,
@@ -200,65 +196,64 @@ const homeStyles = StyleSheet.create({
     width: 275,
   },
 
-  playBox:{
-    flexDirection:"row",
-    marginTop: 20
+  playBox: {
+    flexDirection: 'row',
+    marginTop: 20,
   },
 
   playText: {
-    marginLeft:40, 
-    marginRight: 248, 
-    color: Colors.GRAY5, 
-    fontFamily: 'Poppins-Medium', 
+    marginLeft: 40,
+    marginRight: 248,
+    color: Colors.GRAY5,
+    fontFamily: 'Poppins-Medium',
     fontSize: 20,
   },
 
-  palyArrow:{
-    marginTop: 9
+  palyArrow: {
+    marginTop: 9,
   },
-  
-  playlistBoxes:{
-    flexDirection:"row",
+
+  playlistBoxes: {
+    flexDirection: 'row',
     marginTop: 16,
   },
 
-  playlistTitle:{
-    fontSize: 16, 
-    fontFamily: 'Poppins-SemiBold', 
-    color: Colors.GRAY5, 
+  playlistTitle: {
+    fontSize: 16,
+    fontFamily: 'Poppins-SemiBold',
+    color: Colors.GRAY5,
     marginTop: 12,
   },
 
-  playlistText:{
-    fontSize: 12, 
-    fontFamily: 'Poppins-Medium', 
-    color: Colors.GRAY5, 
+  playlistText: {
+    fontSize: 12,
+    fontFamily: 'Poppins-Medium',
+    color: Colors.GRAY5,
     marginTop: 4,
   },
 
-  favIcon:{
-    width: 42, 
-    height: 42, 
-    borderRadius: 50,  
-    backgroundColor: 
-    Colors.INPUTSER, 
-    marginLeft:24, 
+  favIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 50,
+    backgroundColor: Colors.INPUTSER,
+    marginLeft: 24,
     marginRight: 12,
   },
 
-  favTitle:{    
-    fontSize: 14, 
-    fontFamily: 'Poppins-SemiBold', 
-    color: Colors.GRAY5, 
+  favTitle: {
+    fontSize: 14,
+    fontFamily: 'Poppins-SemiBold',
+    color: Colors.GRAY5,
     marginTop: 12,
   },
 
   favSubTitle: {
-    fontSize: 12, 
-    fontFamily: 'Poppins-Medium', 
-    color: Colors.GRAY5, 
+    fontSize: 12,
+    fontFamily: 'Poppins-Medium',
+    color: Colors.GRAY5,
     marginTop: 4,
-  }
+  },
 });
 
 export {loginStyles, splashStyles, modalStyles, homeStyles};

@@ -3,19 +3,60 @@ import {View, StatusBar} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import {splashStyles} from '@styles/General';
 import Colors from '@styles/Colors';
-import {Text} from 'react-native-animatable';
+import {WebClient} from '../modules/web-client/WebClient';
+import {OAuth2Context} from '../environment/OAuth2Context';
 
 export default class SplashScreen extends Component {
-  goToScreen(routeName) {
-    this.props.navigation.navigate(routeName);
+  private web_client: WebClient;
+
+  static contextType = OAuth2Context;
+  context: React.ContextType<typeof OAuth2Context>;
+
+  constructor(props: any) {
+    super(props);
+    this.web_client = new WebClient();
   }
 
+  goToScreen(routeName: string) {
+    this.props.navigation.replace(routeName);
+  }
+
+  /*
+  async validateLogin() {
+    try {
+      let refresh_token: string = undefined;
+        //'HRmMg6-j7mTv3AKOZtpbLMhUHg-AxWv1ol6-xaUSzUKVMwaGhaXN_x58bB69LRUDQBjuz3BHlACOWIPNSYDnOJAqu-lUN2E2MTx-1bqqfSd-4ImXlOSvIUbYBxzNwx24';
+      if (refresh_token !== undefined) {
+        let d = this.web_client.post(
+          '/oauth2/token',
+          JSON.stringify({
+            grant_type: 'refresh_token',
+            refresh_token: refresh_token,
+          }),
+          {'Content-Type': 'x-www-form-urlencoded'},
+        );
+        console.log(d);
+        d.then(x => x.json()).then(y => console.log(y));
+        let y = await x.json();
+        console.log(y);
+
+      }
+      //const credentials = await Keychain.getGenericPassword();
+      //if (!credentials) {
+      //  console.warn('No credentials has been stored');
+      // }
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+*/
   componentDidMount() {
     setTimeout(
       () => {
+        //his.validateLogin();
         this.goToScreen('Login');
       },
-      5000,
+      3000,
       this,
     );
   }
@@ -46,6 +87,6 @@ export default class SplashScreen extends Component {
           The sound of life
         </Animatable.Text>
       </View>
-    )
+    );
   }
 }

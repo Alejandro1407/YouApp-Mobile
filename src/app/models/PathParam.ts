@@ -1,3 +1,1 @@
-export interface PathParam {
-  [key: string]: string
-}
+export type queryParam = {[key: string]: string};
