@@ -1,3 +1,4 @@
+import { OAuth2Exception } from '@src/app/models/OAuth2Exception';
 import {
   DefaultWebClientProperties,
   WebClientProperties,
@@ -14,12 +15,12 @@ export class WebClient {
     }
   }
 
-  async get(
+  async get<T = {[key: string]: string}>(
     path: string,
     pathParams?: {[key: string]: string},
     additionalHeaders?: {[key: string]: string},
-  ): Promise<Response> {
-    return this.doRequest(
+  ): Promise<T> {
+    return this.doRequest<T>(
       'GET',
       path,
       pathParams,
@@ -28,12 +29,12 @@ export class WebClient {
     );
   }
 
-  async delete(
+  async delete<T = {[key: string]: string}>(
     path: string,
     pathParams?: {[key: string]: string},
     additionalHeaders?: {[key: string]: string},
-  ): Promise<Response> {
-    return this.doRequest(
+  ): Promise<T> {
+    return this.doRequest<T>(
       'DELETE',
       path,
       pathParams,
@@ -42,39 +43,44 @@ export class WebClient {
     );
   }
 
-  async post(
+  async post<T = {[key: string]: string}>(
     path: string,
     body?: BodyInit_,
     pathParams?: {[key: string]: string},
     additionalHeaders?: {[key: string]: string},
-  ): Promise<Response> {
-    return this.doRequest('POST', path, pathParams, body, additionalHeaders);
+  ): Promise<T> {
+    return this.doRequest<T>('POST', path, pathParams, body, additionalHeaders);
   }
 
-  async post_x_encoded(
+  async post_x_encoded<T = {[key: string]: string}>(
     path: string,
     body: {[key: string]: string | undefined},
     pathParams?: {[key: string]: string},
     additionalHeaders?: {[key: string]: string},
-  ): Promise<Response> {
+  ): Promise<T> {
     var formBody: Array<String> = [];
     Object.entries(body).forEach(([k, v]): void => {
       let encodeKey = encodeURIComponent(k);
-      let encodeValue = encodeURIComponent(v);
+      let encodeValue = encodeURIComponent(v!);
       formBody.push(encodeKey + '=' + encodeValue);
     });
     let rawBody = formBody.join('&');
-    console.log(rawBody);
-    return this.doRequest('POST', path, pathParams, rawBody, additionalHeaders);
+    return this.doRequest<T>(
+      'POST',
+      path,
+      pathParams,
+      rawBody,
+      additionalHeaders,
+    );
   }
 
-  async put(
+  async put<T = {[key: string]: string}>(
     path: string,
     body?: BodyInit_,
     pathParams?: {[key: string]: string},
     additionalHeaders?: {[key: string]: string},
-  ): Promise<Response> {
-    return this.doRequest('PUT', path, pathParams, body, additionalHeaders);
+  ): Promise<T> {
+    return this.doRequest<T>('PUT', path, pathParams, body, additionalHeaders);
   }
 
   private processUri(
@@ -94,13 +100,13 @@ export class WebClient {
       : url.toString();
   }
 
-  private doRequest(
+  private doRequest<T>(
     method: string,
     path: string,
     pathParams?: {[key: string]: string},
     body?: BodyInit_,
     additionalHeaders?: {[key: string]: string},
-  ): Promise<Response> {
+  ): Promise<T> {
     return fetch(this.processUri(path, pathParams), {
       method: method,
       headers: {
@@ -109,13 +115,11 @@ export class WebClient {
         ...additionalHeaders,
       },
       body: body,
-    }).then(x => {
-      if (!x.ok) {
-        console.log(x.ok);
-        console.log(x.statusText);
-        return Promise.reject(x.json());
+    }).then(response => {
+      if (!response.ok) {
+        return Promise.reject(response.json());
       } else {
-        return x.json();
+        return response.json().then(data => data as T);
       }
     });
   }

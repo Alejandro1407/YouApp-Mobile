@@ -38,7 +38,7 @@ const OAuth2ContextProvider = ({children}) => {
   };
 
   useEffect(() => {
-    getAuthState(true);;
+    getAuthState(true);
   }, []);
 
   return (

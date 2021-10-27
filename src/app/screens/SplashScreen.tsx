@@ -7,6 +7,7 @@ import {WebClient} from '../modules/web-client/WebClient';
 import {OAuth2Context} from '../environment/OAuth2Context';
 import {OAuth2Credentials} from '../environment/OAuth2Credentials';
 import {OAuth2Type} from '../enums/OAuth2Type';
+import {OAuth2Refresh} from '../models/OAuth2Refresh';
 
 export default class SplashScreen extends Component {
   private web_client: WebClient;
@@ -31,26 +32,36 @@ export default class SplashScreen extends Component {
         x => x.registration === OAuth2Type.YOUAPP,
       );
       if (refresh_token !== undefined) {
-        let request: Promise<Response> = this.web_client.post_x_encoded(
-          '/oauth2/token',
-          {
-            client_id: v?.configuration.clientId!,
-            client_secret: v?.configuration.clientSecret!,
-            grant_type: 'refresh_token',
-            refresh_token: refresh_token!,
-            ClientAuthenticationMethod: 'client_secret_post',
-          },
-          undefined,
-          {
-            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-          },
-        );
+        let request: Promise<OAuth2Refresh> =
+          this.web_client.post_x_encoded<OAuth2Refresh>(
+            '/oauth2/token',
+            {
+              client_id: v?.configuration.clientId!,
+              client_secret: v?.configuration.clientSecret!,
+              grant_type: 'refresh_token',
+              refresh_token: refresh_token!,
+              ClientAuthenticationMethod: 'client_secret_post',
+            },
+            undefined,
+            {
+              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+            },
+          );
         request
-          .then(y => console.log(y))
-          .catch(e => e.then((z: Promise<any>) => console.log(z)));
+          .then(y => {
+            console.log(y);
+            this.context.setAuthorization({
+              loggedIn: true,
+              access_token: y.access_token,
+              refresh_token: y.refresh_token,
+            });
+          })
+          .catch(e => {
+            this.goToScreen('Login');
+          });
+      } else {
+        this.goToScreen('Login');
       }
-      console.log('asd');
-      this.goToScreen('Login');
     } catch (ex) {
       console.log(ex);
     }
