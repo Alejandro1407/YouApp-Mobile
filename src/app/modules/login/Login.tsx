@@ -52,14 +52,11 @@ export class Login extends Component {
     console.debug('OAuth Login with:', _oauth2);
     try {
       const auth = await authorize(_oauth2.configuration);
-      //console.log(auth);
       this.context.setAuthorization({
-        access_token: 'access_token',
+        access_token: auth.accessToken,
         refresh_token: auth.refreshToken,
         loggedIn: true,
       });
-      //console.log(this.context.authorization);
-      //this.goToScreen('Home');
     } catch (ex: unknown) {
       this._show(ex.message);
       console.log(ex);
@@ -126,7 +123,6 @@ export class Login extends Component {
   render() {
     const start = {x: 0, y: 0};
     const end = {x: 1, y: 0};
-    console.log(this.context);
     return (
       <View style={[loginStyles.container, {padding: 50}]}>
         <StatusBar backgroundColor={Colors.BACKGROUND} translucent={true} />

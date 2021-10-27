@@ -1,4 +1,3 @@
-import {PathParam, queryParam} from '@src/app/models/PathParam';
 import {
   DefaultWebClientProperties,
   WebClientProperties,
@@ -15,78 +14,109 @@ export class WebClient {
     }
   }
 
-  private processUri(path: string): string{
-    return `${this.props.host}:${this.props.port}${path}`;
+  async get(
+    path: string,
+    pathParams?: {[key: string]: string},
+    additionalHeaders?: {[key: string]: string},
+  ): Promise<Response> {
+    return this.doRequest(
+      'GET',
+      path,
+      pathParams,
+      undefined,
+      additionalHeaders,
+    );
   }
 
-  async get(path: string, pathParams?: Array<PathParam>): Promise<Response> {
-    let url = new URL(this.processUri(path));
-    try {
-      pathParams?.forEach(k => url.searchParams.append(k.key, k.value));
-      return fetch(url.toString(), {
-        method: 'GET',
-        headers: {
-          // eslint-disable-next-line prettier/prettier
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
-    } catch (error) {
-      console.log(error);
-      return Promise.reject(error);
-    }
+  async delete(
+    path: string,
+    pathParams?: {[key: string]: string},
+    additionalHeaders?: {[key: string]: string},
+  ): Promise<Response> {
+    return this.doRequest(
+      'DELETE',
+      path,
+      pathParams,
+      undefined,
+      additionalHeaders,
+    );
   }
 
   async post(
     path: string,
-    body?: string,
+    body?: BodyInit_,
     pathParams?: {[key: string]: string},
     additionalHeaders?: {[key: string]: string},
   ): Promise<Response> {
-    let t = this.processUri(path);
-    console.log(t);
-    let url = new URL(t);
-    console.log(url);
-    try {
-      Object.entries(pathParams).forEach(([k, v]): void =>
-        url.searchParams.append(k, v),
-      );
-      return fetch(url.toString(), {
-        method: 'POST',
-        headers: {
-          // eslint-disable-next-line prettier/prettier
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          ...additionalHeaders,
-        },
-        body: body,
-      });
-    } catch (error) {
-      console.log(error);
-      return Promise.reject(error);
-    }
+    return this.doRequest('POST', path, pathParams, body, additionalHeaders);
+  }
+
+  async post_x_encoded(
+    path: string,
+    body: {[key: string]: string | undefined},
+    pathParams?: {[key: string]: string},
+    additionalHeaders?: {[key: string]: string},
+  ): Promise<Response> {
+    var formBody: Array<String> = [];
+    Object.entries(body).forEach(([k, v]): void => {
+      let encodeKey = encodeURIComponent(k);
+      let encodeValue = encodeURIComponent(v);
+      formBody.push(encodeKey + '=' + encodeValue);
+    });
+    let rawBody = formBody.join('&');
+    console.log(rawBody);
+    return this.doRequest('POST', path, pathParams, rawBody, additionalHeaders);
   }
 
   async put(
     path: string,
-    body?: string,
-    pathParams?: Array<PathParam>,
+    body?: BodyInit_,
+    pathParams?: {[key: string]: string},
+    additionalHeaders?: {[key: string]: string},
   ): Promise<Response> {
-    let url = new URL(this.processUri(path));
-    try {
-      pathParams?.forEach(k => url.searchParams.append(k.key, k.value));
-      return fetch(url.toString(), {
-        method: 'PUT',
-        headers: {
-          // eslint-disable-next-line prettier/prettier
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: body,
-      });
-    } catch (error) {
-      console.log(error);
-      return Promise.reject(error);
+    return this.doRequest('PUT', path, pathParams, body, additionalHeaders);
+  }
+
+  private processUri(
+    path: string,
+    pathParams?: {[key: string]: string},
+  ): string {
+    let removeSlash: boolean = !path.endsWith('/');
+    let uri = `${this.props.host}:${this.props.port}${path}`;
+    let url = new URL(uri);
+    if (pathParams !== undefined) {
+      Object.entries(pathParams).forEach(([k, v]): void =>
+        url.searchParams.append(k, v),
+      );
     }
+    return removeSlash === true
+      ? url.toString().replace(/\/([^/]*)$/, '$1')
+      : url.toString();
+  }
+
+  private doRequest(
+    method: string,
+    path: string,
+    pathParams?: {[key: string]: string},
+    body?: BodyInit_,
+    additionalHeaders?: {[key: string]: string},
+  ): Promise<Response> {
+    return fetch(this.processUri(path, pathParams), {
+      method: method,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        ...additionalHeaders,
+      },
+      body: body,
+    }).then(x => {
+      if (!x.ok) {
+        console.log(x.ok);
+        console.log(x.statusText);
+        return Promise.reject(x.json());
+      } else {
+        return x.json();
+      }
+    });
   }
 }

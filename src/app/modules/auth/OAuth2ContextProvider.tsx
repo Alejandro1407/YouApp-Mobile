@@ -8,16 +8,18 @@ import {ToastAndroid} from 'react-native';
 const OAuth2ContextProvider = ({children}) => {
   const USERNAME = 'youapp';
   const [credentials, setCredentials] = useState<OAuth2Token>({
-    loggedIn: true,
+    loggedIn: false,
   });
 
-  const getAuthState = async () => {
+  const getAuthState = async (_logged: boolean = false) => {
     try {
       const payload: false | keychain.UserCredentials =
         await keychain.getGenericPassword();
       if (payload) {
-        console.log(payload);
         const token: OAuth2Token = JSON.parse(payload.password);
+        if (_logged) {
+          token.loggedIn = false;
+        }
         setCredentials(token);
       }
     } catch (err) {
@@ -36,7 +38,7 @@ const OAuth2ContextProvider = ({children}) => {
   };
 
   useEffect(() => {
-    getAuthState();
+    getAuthState(true);;
   }, []);
 
   return (

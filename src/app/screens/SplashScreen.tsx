@@ -5,6 +5,8 @@ import {splashStyles} from '@styles/General';
 import Colors from '@styles/Colors';
 import {WebClient} from '../modules/web-client/WebClient';
 import {OAuth2Context} from '../environment/OAuth2Context';
+import {OAuth2Credentials} from '../environment/OAuth2Credentials';
+import {OAuth2Type} from '../enums/OAuth2Type';
 
 export default class SplashScreen extends Component {
   private web_client: WebClient;
@@ -21,42 +23,47 @@ export default class SplashScreen extends Component {
     this.props.navigation.replace(routeName);
   }
 
-  /*
   async validateLogin() {
     try {
-      let refresh_token: string = undefined;
-        //'HRmMg6-j7mTv3AKOZtpbLMhUHg-AxWv1ol6-xaUSzUKVMwaGhaXN_x58bB69LRUDQBjuz3BHlACOWIPNSYDnOJAqu-lUN2E2MTx-1bqqfSd-4ImXlOSvIUbYBxzNwx24';
+      let refresh_token: string | undefined =
+        this.context.authorization.refresh_token;
+      const v = OAuth2Credentials.find(
+        x => x.registration === OAuth2Type.YOUAPP,
+      );
       if (refresh_token !== undefined) {
-        let d = this.web_client.post(
+        let request: Promise<Response> = this.web_client.post_x_encoded(
           '/oauth2/token',
-          JSON.stringify({
+          {
+            client_id: v?.configuration.clientId!,
+            client_secret: v?.configuration.clientSecret!,
             grant_type: 'refresh_token',
-            refresh_token: refresh_token,
-          }),
-          {'Content-Type': 'x-www-form-urlencoded'},
+            refresh_token: refresh_token!,
+            ClientAuthenticationMethod: 'client_secret_post',
+          },
+          undefined,
+          {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+          },
         );
-        console.log(d);
-        d.then(x => x.json()).then(y => console.log(y));
-        let y = await x.json();
-        console.log(y);
-
+        request
+          .then(y => console.log(y))
+          .catch(e => e.then((z: Promise<any>) => console.log(z)));
       }
-      //const credentials = await Keychain.getGenericPassword();
-      //if (!credentials) {
-      //  console.warn('No credentials has been stored');
-      // }
+      console.log('asd');
+      this.goToScreen('Login');
     } catch (ex) {
       console.log(ex);
     }
   }
-*/
+
   componentDidMount() {
     setTimeout(
       () => {
-        //his.validateLogin();
-        this.goToScreen('Login');
+        console.log('trying to re-authenticate');
+        this.validateLogin();
+        //this.goToScreen('Login');
       },
-      3000,
+      1000,
       this,
     );
   }

@@ -19,7 +19,7 @@ const AppNavigation = () => {
       <Stack.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName="Splash">
-        {authorization.loggedIn !== true ? (
+        {authorization.loggedIn === false ? (
           <>
             <Stack.Screen name="Splash" component={SplashScreen} />
             <Stack.Screen name="Recover" component={recoverPasswordScreen} />
