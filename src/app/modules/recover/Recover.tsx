@@ -1,6 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {Text, View, TouchableOpacity, ScrollView} from 'react-native';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  ToastAndroid,
+} from 'react-native';
 import {loginStyles} from '@src/styles/General';
 import InputBox from '@src/styles/InputBox';
 import colors from '@src/styles/Colors';
@@ -14,13 +20,20 @@ export default function recoverPasswordScreen(props: any) {
   const [correo, setCorreo] = useState('');
   const {navigation} = props;
 
-  console.log(correo);
-
   const recoverPassword = (correo: String) => {
-    web_client.get(`/v1/auth/reset-password/${correo}`).then(response => {
-      console.log(response);
-    });
-    navigation.navigate('Login');
+    web_client
+      .get(`/v1/auth/reset-password/${correo}`)
+      .then(response => {
+        console.log(response);
+        ToastAndroid.show(
+          'Se ha enviado su nueva contraseña',
+          ToastAndroid.SHORT,
+        );
+        navigation.navigate('Login');
+      })
+      .catch(e => {
+        ToastAndroid.show(e.message, ToastAndroid.SHORT);
+      });
   };
 
   return (

@@ -7,6 +7,7 @@ import {
   Image,
   Modal,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import {loginStyles, modalStyles} from '@src/styles/General';
 import InputBox from '@src/styles/InputBox';
@@ -33,13 +34,13 @@ export default function RegisterScreen(props: any) {
   ]);
   const [datevisiblity, setDatevisibility] = useState(false);
   //Datos a enviar
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [correo, setCorreo] = useState('');
-  const [user, setUser] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordC, setPasswordC] = useState('');
-  const [fecha, setFecha] = useState('');
+  const [nombre, setNombre] = useState('victor');
+  const [apellido, setApellido] = useState('alejo');
+  const [correo, setCorreo] = useState('alejandroalejo714@gmail.com');
+  const [user, setUser] = useState('vgalvez');
+  const [password, setPassword] = useState('pass');
+  const [passwordC, setPasswordC] = useState('pass');
+  const [fecha, setFecha] = useState('2020-07-14');
   const [base64Photo, setBase64Photo] = useState('');
   const {navigation} = props;
   const [foto, setFoto] = useState(false);
@@ -73,15 +74,19 @@ export default function RegisterScreen(props: any) {
       photo: selectedPhoto === true ? base64Photo : '',
       username: user,
     };
-    console.log(payload);
-
     web_client
       .post('/v1/auth/register', JSON.stringify(payload))
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
+      .then(response => {
+        console.log(response);
+        ToastAndroid.show(
+          'Se ha enviado un correo de confirmacion',
+          ToastAndroid.LONG,
+        );
+        navigation.replace('Login');
+      })
+      .catch(e => {
+        ToastAndroid.show(e.message, ToastAndroid.LONG);
       });
-    navigation.navigate('Login');
   };
 
   const cameraLaunch = () => {
@@ -214,7 +219,7 @@ export default function RegisterScreen(props: any) {
         </View>
       </Modal>
       <ScrollView>
-        <View style={[loginStyles.container, {padding: 50}]}>
+        <View style={[loginStyles.container, {padding: 50, height: 1000}]}>
           <Text style={{color: colors.PRIMARY, fontSize: 25, marginBottom: 25}}>
             Crea una cuenta...
           </Text>

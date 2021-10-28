@@ -1,4 +1,3 @@
-import { OAuth2Exception } from '@src/app/models/OAuth2Exception';
 import {
   DefaultWebClientProperties,
   WebClientProperties,
@@ -117,9 +116,12 @@ export class WebClient {
       body: body,
     }).then(response => {
       if (!response.ok) {
-        return Promise.reject(response.json());
+        console.log(response.bodyUsed);
+        return response.json().then(Promise.reject.bind(Promise)); //  Promise.reject(response.json());
       } else {
-        return response.json().then(data => data as T);
+        return response.text().then(content => {
+          return content.length > 0 ? (JSON.parse(content) as T) : ({} as T);
+        });
       }
     });
   }

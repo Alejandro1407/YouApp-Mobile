@@ -1,19 +1,18 @@
 import React, {Component} from 'react';
-import {View, StatusBar} from 'react-native';
+import {View, StatusBar, ToastAndroid} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import {splashStyles} from '@styles/General';
 import Colors from '@styles/Colors';
-import {WebClient} from '../modules/web-client/WebClient';
-import {OAuth2Context} from '../environment/OAuth2Context';
-import {OAuth2Credentials} from '../environment/OAuth2Credentials';
-import {OAuth2Type} from '../enums/OAuth2Type';
-import {OAuth2Refresh} from '../models/OAuth2Refresh';
+import {WebClient} from '@modules/web-client/WebClient';
+import {OAuth2Context} from '@environment/OAuth2Context';
+import {YouAppCredentials} from '@environment/OAuth2Credentials';
+import {OAuth2TokenResponse} from '@src/app/models/OAuth2TokenResponse';
 
 export default class SplashScreen extends Component {
   private web_client: WebClient;
 
   static contextType = OAuth2Context;
-  context: React.ContextType<typeof OAuth2Context>;
+  context!: React.ContextType<typeof OAuth2Context>;
 
   constructor(props: any) {
     super(props);
@@ -25,45 +24,39 @@ export default class SplashScreen extends Component {
   }
 
   async validateLogin() {
-    try {
-      let refresh_token: string | undefined =
-        this.context.authorization.refresh_token;
-      const v = OAuth2Credentials.find(
-        x => x.registration === OAuth2Type.YOUAPP,
-      );
-      if (refresh_token !== undefined) {
-        let request: Promise<OAuth2Refresh> =
-          this.web_client.post_x_encoded<OAuth2Refresh>(
-            '/oauth2/token',
-            {
-              client_id: v?.configuration.clientId!,
-              client_secret: v?.configuration.clientSecret!,
-              grant_type: 'refresh_token',
-              refresh_token: refresh_token!,
-              ClientAuthenticationMethod: 'client_secret_post',
-            },
-            undefined,
-            {
-              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-            },
-          );
-        request
-          .then(y => {
-            console.log(y);
-            this.context.setAuthorization({
-              loggedIn: true,
-              access_token: y.access_token,
-              refresh_token: y.refresh_token,
-            });
-          })
-          .catch(e => {
-            this.goToScreen('Login');
+    let refresh_token: string | undefined =
+      this.context.authorization.refresh_token;
+    if (refresh_token !== undefined) {
+      this.web_client
+        .post_x_encoded<OAuth2TokenResponse>(
+          '/oauth2/token',
+          {
+            client_id: YouAppCredentials.configuration.clientId!,
+            client_secret: YouAppCredentials.configuration.clientSecret!,
+            grant_type: 'refresh_token',
+            refresh_token: refresh_token!,
+            ClientAuthenticationMethod: 'client_secret_post',
+          },
+          undefined,
+          {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+          },
+        )
+        .then(y => {
+          ToastAndroid.show('Bienvenido', ToastAndroid.SHORT);
+          this.context.setAuthorization({
+            loggedIn: true,
+            access_token: y.access_token!,
+            refresh_token: y.refresh_token!,
           });
-      } else {
-        this.goToScreen('Login');
-      }
-    } catch (ex) {
-      console.log(ex);
+        })
+        .catch(e => {
+          console.log('unable to renovate credentials ' + e);
+          this.goToScreen('Login');
+        });
+    } else {
+      console.log('no credentials was found');
+      this.goToScreen('Login');
     }
   }
 
@@ -72,7 +65,6 @@ export default class SplashScreen extends Component {
       () => {
         console.log('trying to re-authenticate');
         this.validateLogin();
-        //this.goToScreen('Login');
       },
       1000,
       this,

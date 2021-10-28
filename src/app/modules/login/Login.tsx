@@ -10,11 +10,10 @@ import {
   ToastAndroid,
 } from 'react-native';
 import {
-  OAuth2Credentials,
+  YouAppCredentials,
   GoogleCredentials,
 } from '@environment/OAuth2Credentials';
 import {OAuth2Type} from '@enums/OAuth2Type';
-import {OAuth2Configuration} from '@models/OAuth2Configuration';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 //Styles
@@ -25,12 +24,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import {GoogleAuthorizationRequest} from '@src/app/models/GoogleAuthorizationRequest';
 import {WebClient} from '@src/app/modules/web-client/WebClient';
 import {OAuth2Context} from '@src/app/environment/OAuth2Context';
+import {OAuth2TokenResponse} from '@src/app/models/OAuth2TokenResponse';
 
 export class Login extends Component {
   private web_client: WebClient;
 
   static contextType = OAuth2Context;
-  context: React.ContextType<typeof OAuth2Context>;
+  context!: React.ContextType<typeof OAuth2Context>;
 
   constructor(props: any) {
     super(props);
@@ -39,19 +39,11 @@ export class Login extends Component {
     GoogleSignin.configure(GoogleCredentials);
   }
 
-  _getConfig(_oauth2Type: OAuth2Type): OAuth2Configuration {
-    const v = OAuth2Credentials.find(x => x.registration === _oauth2Type);
-    if (v === undefined) {
-      throw new TypeError('Not OAuthConfiguration found?');
-    }
-    return v;
-  }
-
   _onLogin = async (_oauthType: OAuth2Type): Promise<void> => {
-    let _oauth2: OAuth2Configuration = this._getConfig(_oauthType);
-    console.debug('OAuth Login with:', _oauth2);
+    console.debug('OAuth Login with:', YouAppCredentials);
     try {
-      const auth = await authorize(_oauth2.configuration);
+      const auth = await authorize(YouAppCredentials.configuration);
+      ToastAndroid.show('Bienvenido', ToastAndroid.LONG);
       this.context.setAuthorization({
         access_token: auth.accessToken,
         refresh_token: auth.refreshToken,
@@ -67,28 +59,9 @@ export class Login extends Component {
     ToastAndroid.show(message, ToastAndroid.SHORT);
   }
 
-  _onLogout = async (_oauthType: OAuth2Type): Promise<void> => {
-    let _oauth2: OAuth2Configuration = this._getConfig(_oauthType);
-    let accessToken = this.state.accessToken;
-    console.debug('OAuth Logout with:', _oauth2);
-    if (accessToken == null) {
-      return;
-    }
-    try {
-      //await revoke(_oauth2.configuration, {
-      //  tokenToRevoke: accessToken,
-      //});
-      console.log('has been revoked');
-      this.setState({accessToken: null});
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   async google_oauth() {
     try {
       await GoogleSignin.hasPlayServices();
-      console.log('google services are available');
       const userInfo = await GoogleSignin.signIn();
       const tokens = await GoogleSignin.getTokens();
       var auth: GoogleAuthorizationRequest = {
@@ -98,22 +71,25 @@ export class Login extends Component {
       };
       await this.register_google(auth);
     } catch (err) {
+      this._show(err.message);
       console.error(err);
     }
   }
 
   async register_google(request: GoogleAuthorizationRequest) {
-    try {
-      let promise = await this.web_client.post(
-        '/v1/auth/google',
-        JSON.stringify(request),
-      );
-      let json = await promise.json();
-      console.log(json);
-      this.goToScreen('Home');
-    } catch (e) {
-      console.error(e);
-    }
+    this.web_client
+      .post<OAuth2TokenResponse>('/v1/auth/google/', JSON.stringify(request))
+      .then(data => {
+        ToastAndroid.show('Bienvenido', ToastAndroid.LONG);
+        this.context.setAuthorization({
+          access_token: data.access_token!,
+          refresh_token: data.refresh_token!,
+          loggedIn: true,
+        });
+      })
+      .catch(e => {
+        ToastAndroid.show(e.message, ToastAndroid.LONG);
+      });
   }
 
   goToScreen(routeName: string) {
