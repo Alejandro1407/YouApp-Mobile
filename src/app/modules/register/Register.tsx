@@ -34,13 +34,13 @@ export default function RegisterScreen(props: any) {
   ]);
   const [datevisiblity, setDatevisibility] = useState(false);
   //Datos a enviar
-  const [nombre, setNombre] = useState('victor');
-  const [apellido, setApellido] = useState('alejo');
-  const [correo, setCorreo] = useState('alejandroalejo714@gmail.com');
-  const [user, setUser] = useState('vgalvez');
-  const [password, setPassword] = useState('pass');
-  const [passwordC, setPasswordC] = useState('pass');
-  const [fecha, setFecha] = useState('2020-07-14');
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [user, setUser] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordC, setPasswordC] = useState('');
+  const [fecha, setFecha] = useState('');
   const [base64Photo, setBase64Photo] = useState('');
   const {navigation} = props;
   const [foto, setFoto] = useState(false);

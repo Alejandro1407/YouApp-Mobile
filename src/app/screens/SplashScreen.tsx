@@ -51,7 +51,7 @@ export default class SplashScreen extends Component {
           });
         })
         .catch(e => {
-          console.log('unable to renovate credentials ' + e);
+          console.log('unable to renovate credentials ' + e.message);
           this.goToScreen('Login');
         });
     } else {
