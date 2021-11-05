@@ -23,6 +23,10 @@ export default class HomeScreen extends Component {
     });
   };
 
+  goToScreen(routeName: string) {
+    this.props.navigation.navigate(routeName);
+  }
+
   render() {
     return (
       <>
@@ -134,6 +138,13 @@ export default class HomeScreen extends Component {
                 />
               </View>
             </View>
+          </View>
+          <View>
+            <Ionicons name='musical-notes-outline'               
+                      size={30}
+                      color={Colors.ACCENT}
+                      onPress={ () => this.goToScreen('Music')}
+            />
           </View>
         </View>
       </>

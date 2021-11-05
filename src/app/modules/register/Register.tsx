@@ -59,7 +59,7 @@ export default function RegisterScreen(props: any) {
   const hideModal = () => {
     setDatevisibility(false);
   };
-  const confirmarFecha = date => {
+  const confirmarFecha = (date: any) => {
     setFecha(date.toISOString().split('T')[0]);
     hideModal();
   };
