@@ -1,5 +1,6 @@
 import SplashScreen from '@screens/SplashScreen';
 import HomeScreen from '@screens/HomeScreen';
+import MusicScreen from '@screens/MusicPlayer';
 import {Login} from '@modules/login/Login';
 import Register from '../register/Register';
 import recoverPasswordScreen from '../recover/Recover';
@@ -27,7 +28,10 @@ const AppNavigation = () => {
             <Stack.Screen name="Login" component={Login} />
           </>
         ) : (
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Music" component={MusicScreen} />
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
