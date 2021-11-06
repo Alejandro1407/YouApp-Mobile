@@ -8,6 +8,7 @@
       "@app/*": ["src/app/*"],
       "@assets/*": ["src/assets/*"],
       "@styles/*": ["src/styles/*"],
+      "@utils/*": ["src/app/utils/*"],
       "@enums/*": ["src/app/enums/*"],
       "@screens/*": ["src/app/screens/*"],
       "@models/*": ["src/app/models/*"],

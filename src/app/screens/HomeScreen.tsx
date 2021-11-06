@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {Component} from 'react';
 import {
   Text,
@@ -6,22 +7,48 @@ import {
   ScrollView,
   Image,
   StatusBar,
+  Dimensions,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //Styles
 import {homeStyles} from '@src/styles/General';
 import Colors from '@src/styles/Colors';
 import {OAuth2Context} from '../environment/OAuth2Context';
+import AppPlayer from '../modules/player/AppPlayer';
+import TrackPlayer, {State} from 'react-native-track-player';
 
 export default class HomeScreen extends Component {
   static contextType = OAuth2Context;
   context: React.ContextType<typeof OAuth2Context>;
+
+  screen = Dimensions.get('screen');
 
   logout = () => {
     this.context.setAuthorization({
       loggedIn: false,
     });
   };
+  async componentDidMount() {
+    AppPlayer.initializePlayer();
+    await TrackPlayer.add({
+      url: 'http://10.0.40.48:9090/youapp/049d1e78-bebb-4541-835d-a86def2460d0_1636089824.mp3',
+      title: 'Sweather Weather',
+      album: 'Album 1',
+    });
+    console.log(this.screen);
+  }
+
+  async play() {
+    const state = await TrackPlayer.getState();
+    console.log('actual state' + state);
+    if (state === State.Playing) {
+      console.log('pausing');
+      await TrackPlayer.pause();
+    } else {
+      console.log('playing');
+      await TrackPlayer.play();
+    }
+  }
 
   goToScreen(routeName: string) {
     this.props.navigation.navigate(routeName);
@@ -34,7 +61,8 @@ export default class HomeScreen extends Component {
         <View style={homeStyles.container}>
           <View style={homeStyles.Header}>
             <Text style={homeStyles.headerTitle}>Libreria</Text>
-            <Ionicons onPress={this.logout}
+            <Ionicons
+              onPress={this.play}
               style={homeStyles.Exit}
               name="exit-outline"
               size={30}
@@ -45,7 +73,7 @@ export default class HomeScreen extends Component {
             <Ionicons
               style={homeStyles.iconSearch}
               name="search-outline"
-              size={17}
+              size={20}
               color={Colors.GRAY3}
             />
             <TextInput

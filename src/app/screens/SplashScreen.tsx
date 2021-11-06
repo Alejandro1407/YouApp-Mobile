@@ -43,6 +43,7 @@ export default class SplashScreen extends Component {
           },
         )
         .then(y => {
+          console.log('re-authenticated');
           ToastAndroid.show('Bienvenido', ToastAndroid.SHORT);
           this.context.setAuthorization({
             loggedIn: true,

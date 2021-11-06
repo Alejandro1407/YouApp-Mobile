@@ -1,5 +1,7 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import Colors from './Colors';
+
+const {width,height} = Dimensions.get('screen');
 
 //Estilos para SplashScreen
 const splashStyles = StyleSheet.create({
@@ -157,7 +159,8 @@ const homeStyles = StyleSheet.create({
 
   Header: {
     flexDirection: 'row',
-    marginTop: 56,
+    marginTop: 25,
+    justifyContent: 'space-around',
   },
 
   headerTitle: {
@@ -180,12 +183,13 @@ const homeStyles = StyleSheet.create({
     borderColor: Colors.INPUTSER,
     marginHorizontal: 24,
     marginTop: 20,
-    width: 370,
+    width: width * 0.9,
+    height: height * 0.05
   },
 
   iconSearch: {
-    marginTop: 15,
-    marginHorizontal: 17.67,
+   // marginTop: 15,
+    // marginHorizontal: 17.67,
   },
 
   textInput: {

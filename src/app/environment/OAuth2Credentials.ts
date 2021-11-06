@@ -6,7 +6,7 @@ import {ConfigureParams} from '@react-native-google-signin/google-signin/lib/typ
 const YouAppCredentials: OAuth2Configuration = {
   registration: OAuth2Type.YOUAPP,
   configuration: {
-    issuer: 'http://192.168.0.17:8083',
+    issuer: 'http://10.0.40.48:8083',
     clientId: 'youapp',
     clientAuthMethod: 'post',
     redirectUrl: 'youapp://oauth',
