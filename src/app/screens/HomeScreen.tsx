@@ -168,10 +168,11 @@ export default class HomeScreen extends Component {
             </View>
           </View>
           <View>
-            <Ionicons name='musical-notes-outline'               
-                      size={30}
-                      color={Colors.ACCENT}
-                      onPress={ () => this.goToScreen('Music')}
+            <Ionicons
+              name="musical-notes-outline"
+              size={30}
+              color={Colors.ACCENT}
+              onPress={() => this.goToScreen('Music')}
             />
           </View>
         </View>
