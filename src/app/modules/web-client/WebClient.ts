@@ -116,7 +116,6 @@ export class WebClient {
       body: body,
     }).then(response => {
       if (!response.ok) {
-        console.log(response.bodyUsed);
         return response.json().then(Promise.reject.bind(Promise)); //  Promise.reject(response.json());
       } else {
         return response.text().then(content => {

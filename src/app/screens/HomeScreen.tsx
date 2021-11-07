@@ -1,5 +1,6 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-native/no-inline-styles */
-import React, {Component} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -7,54 +8,87 @@ import {
   ScrollView,
   Image,
   StatusBar,
-  Dimensions,
+  ToastAndroid,
+  TouchableOpacity,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //Styles
 import {homeStyles} from '@src/styles/General';
 import Colors from '@src/styles/Colors';
 import {OAuth2Context} from '../environment/OAuth2Context';
+import {WebClient} from '../modules/web-client/WebClient';
+import {Music} from '../models/Music';
 import AppPlayer from '../modules/player/AppPlayer';
-import TrackPlayer, {State} from 'react-native-track-player';
+import TrackPlayer, { State } from 'react-native-track-player';
 
-export default class HomeScreen extends Component {
-  static contextType = OAuth2Context;
-  context: React.ContextType<typeof OAuth2Context>;
+const HomeScreen = (props: any) => {
+  const {authorization,setAuthorization}  = useContext(OAuth2Context);
+  const {navigation} = props;
+  const [songs,setSongs] = useState<Music[]>([]);
 
-  screen = Dimensions.get('screen');
+  const web_client = new WebClient({host:'http://192.168.101.2',port:8085});
 
-  logout = () => {
-    this.context.setAuthorization({
+  const setup = async () => {
+    await AppPlayer.initializePlayer();
+    web_client
+    .get<Music[]>('/v1/storage/music/',undefined
+    ,{
+      Authorization: 'Bearer ' + authorization.access_token,
+    })
+    .then(s => {
+      setSongs(s);
+    })
+    .catch(error => {
+      console.log('got error');
+      console.log(error);
+      ToastAndroid.show('Failed to retrieve music ' + error.message , ToastAndroid.SHORT);
+    });
+  };
+
+  const logout = () => {
+    setAuthorization({
       loggedIn: false,
     });
   };
-  async componentDidMount() {
-    AppPlayer.initializePlayer();
+
+  useEffect(() => {
+    setup();
+  }, []);
+
+
+  const goToScreen = (routeName: string) => {
+    navigation.navigate(routeName);
+  };
+
+  const addQueue = async (song: Music) => {
+    //console.log(song);
     await TrackPlayer.add({
-      url: 'http://10.0.40.48:9090/youapp/049d1e78-bebb-4541-835d-a86def2460d0_1636089824.mp3',
-      title: 'Sweather Weather',
-      album: 'Album 1',
+      url: song.uri,
+      title: song.title,
+      artwork: song.photo,
+      artist: song.user.fullName,
+      duration: song.duration,
     });
-    console.log(this.screen);
-  }
-
-  async play() {
     const state = await TrackPlayer.getState();
-    console.log('actual state' + state);
-    if (state === State.Playing) {
-      console.log('pausing');
-      await TrackPlayer.pause();
+    if (state !== State.Playing){
+      TrackPlayer.play().then(() => goToScreen('Music'));
     } else {
-      console.log('playing');
-      await TrackPlayer.play();
+      ToastAndroid.show('Song has been added to queue',ToastAndroid.SHORT);
     }
-  }
+  };
 
-  goToScreen(routeName: string) {
-    this.props.navigation.navigate(routeName);
-  }
+  const renderItems = () => {
+    return songs !== undefined ?
+      songs.map(s => (
+      <TouchableOpacity style={{marginLeft: 24}} key={s.id} onPress={() => addQueue(s)}>
+        <Image source={{uri: s.photo}} style={{width: 200, height: 200}} />
+        <Text style={homeStyles.playlistTitle}>{s.title}</Text>
+        <Text style={homeStyles.playlistText}>{s.user.fullName}</Text>
+      </TouchableOpacity> )
+      )
+    : <Text>Cargando</Text>;
+  };
 
-  render() {
     return (
       <>
         <StatusBar backgroundColor={Colors.BACKGROUND} />
@@ -62,7 +96,7 @@ export default class HomeScreen extends Component {
           <View style={homeStyles.Header}>
             <Text style={homeStyles.headerTitle}>Libreria</Text>
             <Ionicons
-              onPress={this.play}
+              onPress={logout}
               style={homeStyles.Exit}
               name="exit-outline"
               size={30}
@@ -94,21 +128,7 @@ export default class HomeScreen extends Component {
             </View>
             <ScrollView horizontal>
               <View style={homeStyles.playlistBoxes}>
-                <View style={{marginLeft: 24}}>
-                  <Image source={require('@assets/playList1.png')} />
-                  <Text style={homeStyles.playlistTitle}>Stargroves</Text>
-                  <Text style={homeStyles.playlistText}>20 songs</Text>
-                </View>
-                <View style={{marginLeft: 20}}>
-                  <Image source={require('@assets/playList2.png')} />
-                  <Text style={homeStyles.playlistTitle}>So it goes</Text>
-                  <Text style={homeStyles.playlistText}>5 songs</Text>
-                </View>
-                <View style={{marginLeft: 20}}>
-                  <Image source={require('@assets/playList2.png')} />
-                  <Text style={homeStyles.playlistTitle}>So it goes</Text>
-                  <Text style={homeStyles.playlistText}>5 songs</Text>
-                </View>
+                {renderItems()}
               </View>
             </ScrollView>
           </View>
@@ -172,11 +192,12 @@ export default class HomeScreen extends Component {
               name="musical-notes-outline"
               size={30}
               color={Colors.ACCENT}
-              onPress={() => this.goToScreen('Music')}
+              onPress={() => goToScreen('Music')}
             />
           </View>
         </View>
       </>
     );
-  }
-}
+};
+
+export {HomeScreen};

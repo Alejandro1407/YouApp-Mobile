@@ -32,32 +32,22 @@ const MusicScreen = () => {
   const [track, setTrack] = useState<Track>();
 
   const setup = async () => {
-    try {
-      await AppPlayer.initializePlayer();
-      await TrackPlayer.add([
-        {
-          url: 'http://192.168.101.2:9090/youapp/049d1e78-bebb-4541-835d-a86def2460d0_1636089824.mp3',
-          title: 'Sweather Weather',
-          artist: 'The Neighbourhood',
-          album: 'Album 1',
-          duration: 247.2,
-        },
-        {
-          url: 'http://192.168.101.2:9090/youapp/53603788-944c-4cc3-b39d-874436eff601_1636327932.mp3',
-          title: 'Lets Kill Tonight',
-          artist: 'Panic! At Disco',
-          album: 'Album 1',
-          duration: 199.8,
-        },
-      ]);
-    } catch (e) {
-      console.log(e);
+    let cTrack: number = await TrackPlayer.getCurrentTrack();
+    let cT: Track = await TrackPlayer.getTrack(cTrack);
+    if (cT !== undefined) {
+      setTrack(cT);
     }
   };
 
-  useTrackPlayerEvents([Event.PlaybackTrackChanged], async event => {
+  const events: Event[] = [
+    Event.PlaybackState,
+    Event.PlaybackTrackChanged,
+    Event.PlaybackError,
+    Event.RemotePlay,
+  ];
+
+  useTrackPlayerEvents(events, async event => {
     if (event.type === Event.PlaybackTrackChanged && event.nextTrack != null) {
-      console.log(event);
       const t: Track = await TrackPlayer.getTrack(event.nextTrack);
       setTrack(t);
     }
@@ -68,7 +58,6 @@ const MusicScreen = () => {
 
   useEffect(() => {
     setup();
-    return () => TrackPlayer.destroy();
   }, []);
 
   const play = async () => {
@@ -104,8 +93,11 @@ const MusicScreen = () => {
         <View style={styles.maiContainer}>
           <View style={styles.artworkWrapper}>
             <Image
+              source={{
+                uri:
+                  track === undefined ? undefined : track.artwork?.toString(),
+              }}
               style={styles.artworkImg}
-              source={require('@assets/good.jpg')}
             />
           </View>
           <View>
