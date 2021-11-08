@@ -44,7 +44,7 @@ const MusicScreen = () => {
   const [enabled, setEnabled] = useState<boolean>(false);
   const [adding, setAdding] = useState<boolean>(false);
   const {authorization} = useContext(OAuth2Context);
-  const web_client = new WebClient({host: 'http://192.168.101.2', port: 8085});
+  const web_client = new WebClient();
 
   const setup = async () => {
     let cTrack: number = await TrackPlayer.getCurrentTrack();

@@ -24,7 +24,7 @@ const SearchScreen = () => {
   const {authorization} = useContext(OAuth2Context);
   const [payload, setPayload] = useState<string>();
   const [songs, setSongs] = useState<Music[]>([]);
-  const web_client = new WebClient({host: 'http://192.168.101.2', port: 8085});
+  const web_client = new WebClient();
   const navigation = useNavigation();
   const search = () => {
     if (payload?.length === 0) {

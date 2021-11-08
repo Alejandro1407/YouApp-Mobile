@@ -15,6 +15,7 @@ import AppPlayer from '../player/AppPlayer';
 import TrackPlayer from 'react-native-track-player';
 import UserScreen from '@screens/UserScreen';
 import ChangePasswordScreen from '@src/app/screens/ChangePasswordScreen';
+import UploadScreen from '@src/app/screens/UploadScreen';
 
 const AppNavigation = () => {
   const {authorization} = useContext(OAuth2Context);
@@ -49,6 +50,7 @@ const AppNavigation = () => {
             <Stack.Screen name="Music" component={MusicScreen} />
             <Stack.Screen name="Search" component={SearchScreen} />
             <Stack.Screen name="User" component={UserScreen} />
+            <Stack.Screen name="Upload" component={UploadScreen} />
             <Stack.Screen
               name="ChangePassword"
               component={ChangePasswordScreen}

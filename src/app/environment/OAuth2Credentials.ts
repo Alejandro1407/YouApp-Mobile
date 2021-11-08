@@ -2,11 +2,12 @@
 import {OAuth2Configuration} from '@models/OAuth2Configuration';
 import {OAuth2Type} from '@enums/OAuth2Type';
 import {ConfigureParams} from '@react-native-google-signin/google-signin/lib/typescript/types';
+import {DefaultOAuth2Enviroment} from './OAuth2Enviroment';
 
 const YouAppCredentials: OAuth2Configuration = {
   registration: OAuth2Type.YOUAPP,
   configuration: {
-    issuer: 'http://192.168.101.2:8083',
+    issuer: `${DefaultOAuth2Enviroment.host}:${DefaultOAuth2Enviroment.port}`,
     clientId: 'youapp',
     clientAuthMethod: 'post',
     redirectUrl: 'youapp://oauth',

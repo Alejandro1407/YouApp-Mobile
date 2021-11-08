@@ -1,11 +1,13 @@
+import {DefaultOAuth2Enviroment} from '@environment/OAuth2Enviroment';
+
 interface WebClientProperties {
   host: string;
   port: number;
 }
 
 const DefaultWebClientProperties: WebClientProperties = {
-  host: 'http://192.168.101.2',
-  port: 8083,
+  host: DefaultOAuth2Enviroment.host,
+  port: DefaultOAuth2Enviroment.port,
 };
 
 // eslint-disable-next-line no-undef
