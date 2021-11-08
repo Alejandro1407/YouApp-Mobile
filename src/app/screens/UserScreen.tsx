@@ -34,6 +34,7 @@ export default function UserScreen() {
         <Ionicons name="md-person-circle" color={colors.ACCENT} size={100} />
       );
     } else {
+      console.log("Foto", user.photo);
       return (
         <Image
           source={{uri: user.photo}}
@@ -50,87 +51,95 @@ export default function UserScreen() {
       </View>
     ) : (
       <>
-        <Text
-          style={{
-            color: colors.PRIMARY,
-            fontSize: 25,
-            marginBottom: 25,
-            textAlign: 'center',
-          }}>
-          {user.username}
-        </Text>
-        <View style={{alignItems: 'center'}}>{profileFoto()}</View>
-        <Text
-          style={{
-            color: '#fff',
-            fontSize: 20,
-            fontWeight: '600',
-            textAlign: 'center',
-            margin: 15,
-            flexDirection: 'column',
-          }}>
-          Nombre completo:
-        </Text>
-        <Text
-          style={{
-            color: '#fff',
-            fontSize: 20,
-            textAlign: 'center',
-            margin: 15,
-            flexDirection: 'column',
-          }}>
-          {user.fullName}
-        </Text>
-        <Text
-          style={{
-            color: '#fff',
-            fontSize: 20,
-            fontWeight: '600',
-            textAlign: 'center',
-            margin: 15,
-            flexDirection: 'column',
-          }}>
-          Email:
-        </Text>
-        <Text
-          style={{
-            color: '#fff',
-            fontSize: 20,
-            textAlign: 'center',
-            margin: 15,
-            flexDirection: 'column',
-          }}>
-          {user.email}
-        </Text>
-        <Text
-          style={{
-            color: '#fff',
-            fontSize: 20,
-            fontWeight: '600',
-            textAlign: 'center',
-            margin: 15,
-            flexDirection: 'column',
-          }}>
-          Birthday:
-        </Text>
-        <Text
-          style={{
-            color: '#fff',
-            fontSize: 20,
-            textAlign: 'center',
-            margin: 15,
-            flexDirection: 'column',
-          }}>
-          {user.birthday}
-        </Text>
-        <View style={{marginTop: 15, alignItems: 'center'}}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('ChangePassword')}
-            style={[loginStyles.btnTransparent, {padding: 15}]}>
-            <Text style={[loginStyles.btntxt]}>Cambiar Contraseña</Text>
-          </TouchableOpacity>
+        <View style={homeStyles.container}>
+          <View style={homeStyles.Header}>
+            <Text style={[homeStyles.headerTitle, { fontSize: 25, marginRight: '25%'}]}>
+              Informacion personal
+            </Text>
+          </View>
+
+          <Text
+            style={{
+              color: colors.PRIMARY,
+              fontSize: 25,
+              marginBottom: 25,
+              textAlign: 'center',
+            }}>
+            {user.username}
+          </Text>
+          <View style={{alignItems: 'center'}}>{profileFoto()}</View>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: 20,
+              fontWeight: '600',
+              textAlign: 'center',
+              margin: 15,
+              flexDirection: 'column',
+            }}>
+            Nombre completo:
+          </Text>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: 20,
+              textAlign: 'center',
+              margin: 15,
+              flexDirection: 'column',
+            }}>
+            {user.fullName}
+          </Text>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: 20,
+              fontWeight: '600',
+              textAlign: 'center',
+              margin: 15,
+              flexDirection: 'column',
+            }}>
+            Email:
+          </Text>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: 20,
+              textAlign: 'center',
+              margin: 15,
+              flexDirection: 'column',
+            }}>
+            {user.email}
+          </Text>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: 20,
+              fontWeight: '600',
+              textAlign: 'center',
+              margin: 15,
+              flexDirection: 'column',
+            }}>
+            Birthday:
+          </Text>
+          <Text
+            style={{
+              color: '#fff',
+              fontSize: 20,
+              textAlign: 'center',
+              margin: 15,
+              flexDirection: 'column',
+            }}>
+            {user.birthday}
+          </Text>
+          <View style={{marginTop: 15, alignItems: 'center'}}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ChangePassword')}
+              style={[loginStyles.btnTransparent, {padding: 15}]}>
+              <Text style={[loginStyles.btntxt]}>Cambiar Contraseña</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </>
+        </>
     );
   };
 
