@@ -61,13 +61,21 @@ export default class HomeScreen extends Component {
         <View style={homeStyles.container}>
           <View style={homeStyles.Header}>
             <Text style={homeStyles.headerTitle}>Libreria</Text>
-            <Ionicons
-              onPress={this.play}
-              style={homeStyles.Exit}
-              name="exit-outline"
-              size={30}
-              color={Colors.ACCENT}
-            />
+            <View style={homeStyles.Exit}>
+              <Ionicons onPress={() => this.goToScreen('User')}
+                name="md-person-circle"
+                size={30}
+                color={Colors.ACCENT}
+                style={{marginRight: 20,}}
+              />
+              <Ionicons
+                onPress={this.play}
+                name="exit-outline"
+                size={30}
+                color={Colors.ACCENT}
+                style={{marginRight: 20,}}
+              />
+            </View>
           </View>
           <View style={homeStyles.inputSearch}>
             <Ionicons
