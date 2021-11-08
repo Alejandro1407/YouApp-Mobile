@@ -10,6 +10,7 @@ import {WebClient} from '../modules/web-client/WebClient';
 import colors from '@src/styles/Colors';
 import {User} from '@models/User';
 import {useNavigation} from '@react-navigation/native';
+import { Navbar } from './Navbar';
 
 export default function UserScreen() {
   const [user, setUser] = useState<User>({});
@@ -58,16 +59,18 @@ export default function UserScreen() {
             </Text>
           </View>
 
+          <View style={{alignItems: 'center'}}>{profileFoto()}</View>
           <Text
             style={{
               color: colors.PRIMARY,
-              fontSize: 25,
+              fontSize: 20,
+              fontFamily: 'Poppins-Bold',
               marginBottom: 25,
+              letterSpacing: 2,
               textAlign: 'center',
             }}>
             {user.username}
           </Text>
-          <View style={{alignItems: 'center'}}>{profileFoto()}</View>
           <Text
             style={{
               color: '#fff',
@@ -139,6 +142,7 @@ export default function UserScreen() {
             </TouchableOpacity>
           </View>
         </View>
+        <Navbar/>
         </>
     );
   };
