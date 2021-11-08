@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   Dimensions,
   TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
@@ -57,8 +58,11 @@ const MusicScreen = () => {
   useTrackPlayerEvents([Event.PlaybackTrackChanged], async event => {
     if (event.type === Event.PlaybackTrackChanged && event.nextTrack != null) {
       console.log(event);
-      const dd: Track = await TrackPlayer.getTrack(event.nextTrack);
-      setTrack(dd);
+      const t: Track = await TrackPlayer.getTrack(event.nextTrack);
+      setTrack(t);
+    }
+    if (event.type === Event.PlaybackError) {
+      console.warn('An error occured while playing the current track.');
     }
   });
 
@@ -78,11 +82,19 @@ const MusicScreen = () => {
   };
 
   const next = async () => {
-    await TrackPlayer.skipToNext();
+    try {
+      await TrackPlayer.skipToNext();
+    } catch (e) {
+      ToastAndroid.show('Cannot skip to next', ToastAndroid.SHORT);
+    }
   };
 
   const prev = async () => {
-    await TrackPlayer.skipToPrevious();
+    try {
+      await TrackPlayer.skipToPrevious();
+    } catch (e) {
+      ToastAndroid.show('Cannot skip to prev', ToastAndroid.SHORT);
+    }
   };
 
   return (
