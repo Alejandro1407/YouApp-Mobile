@@ -52,7 +52,8 @@ const loginStyles = StyleSheet.create({
     fontWeight: '900',
   },
   btnMain: {
-    width: 280,
+    textAlign: 'center',
+    width: 220,
     marginTop: 40,
     marginBottom: 20,
     backgroundColor: Colors.ACCENT,

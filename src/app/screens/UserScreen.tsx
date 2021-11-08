@@ -1,18 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useContext, useState} from 'react';
-import {Text, View, Image, StatusBar} from 'react-native';
+import {Text, View, Image, StatusBar, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //Styles
-import {homeStyles} from '@src/styles/General';
+import {homeStyles, loginStyles} from '@src/styles/General';
 import Colors from '@src/styles/Colors';
 import {OAuth2Context} from '../environment/OAuth2Context';
 import {WebClient} from '../modules/web-client/WebClient';
 import colors from '@src/styles/Colors';
 import {User} from '@models/User';
+import {useNavigation} from '@react-navigation/native';
 
 export default function UserScreen() {
   const [user, setUser] = useState<User>({});
   const {authorization} = useContext(OAuth2Context);
+  const navigation = useNavigation();
   const web_client = new WebClient();
   useEffect(() => {
     web_client
@@ -121,6 +123,13 @@ export default function UserScreen() {
           }}>
           {user.birthday}
         </Text>
+        <View style={{marginTop: 15, alignItems: 'center'}}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ChangePassword')}
+            style={[loginStyles.btnTransparent, {padding: 15}]}>
+            <Text style={[loginStyles.btntxt]}>Cambiar Contraseña</Text>
+          </TouchableOpacity>
+        </View>
       </>
     );
   };

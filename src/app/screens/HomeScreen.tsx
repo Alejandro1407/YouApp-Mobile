@@ -138,13 +138,20 @@ const HomeScreen = (props: any) => {
   };
 
   const renderPlaylist = () => {
-    return playlist.map(s => (
-      <TouchableOpacity style={{marginLeft: 24}} key={s.id} onPress={() => addPlaylist(s.songs)}>
-      <Image source={require('@assets/favicon.png')} style={{width: 150, height: 150}} />
-      <Text style={homeStyles.playlistTitle}>{s.title}</Text>
-      <Text style={homeStyles.playlistText}>{s.user.fullName}</Text>
-    </TouchableOpacity>
-    ));
+    return playlist.length > 0 ?
+      playlist.map(s => (
+        <TouchableOpacity style={{marginLeft: 24}} key={s.id} onPress={() => addPlaylist(s.songs)}>
+        <Image source={require('@assets/favicon.png')} style={{width: 150, height: 150}} />
+        <Text style={homeStyles.playlistTitle}>{s.title}</Text>
+        <Text style={homeStyles.playlistText}>{s.user.fullName}</Text>
+      </TouchableOpacity>
+      ))
+      : (<View style={{alignItems: 'center'}}>
+      <Image
+        source={require('@assets/loading.gif')}
+        style={{height: 100, width: 100}}
+        />
+    </View>);
   };
 
   const renderItems = (music: Music[]) => {

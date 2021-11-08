@@ -141,11 +141,6 @@ const MusicScreen = () => {
     }
   });
 
-  useEffect(() => {
-    setup();
-    getPlaylist();
-  }, []);
-
   const play = async () => {
     console.log(track);
     if (playbackState === State.Playing) {
@@ -180,7 +175,10 @@ const MusicScreen = () => {
         .get('/v1/storage/music/like/' + track.id, undefined, {
           Authorization: 'Bearer ' + authorization.access_token,
         })
-        .then(() => (track.liked = true))
+        .then(() => {
+          track.liked = true;
+          updateMetada(track);
+        })
         .catch(error => {
           console.log(error);
           ToastAndroid.show('Failed to like this song', ToastAndroid.SHORT);
@@ -197,7 +195,10 @@ const MusicScreen = () => {
         .get('/v1/storage/music/dislike/' + track.id, undefined, {
           Authorization: 'Bearer ' + authorization.access_token,
         })
-        .then(() => (track.liked = false))
+        .then(() => {
+          track.liked = false;
+          updateMetada(track);
+        })
         .catch(error => {
           console.log(error);
           ToastAndroid.show('Failed to dislike this song', ToastAndroid.SHORT);
@@ -206,6 +207,16 @@ const MusicScreen = () => {
       console.log('unliked');
     }
   };
+
+  const updateMetada = async (t: Track) => {
+    let number = await TrackPlayer.getCurrentTrack();
+    TrackPlayer.updateMetadataForTrack(number, t);
+  };
+
+  useEffect(() => {
+    setup();
+    getPlaylist();
+  }, []);
 
   return (
     <>

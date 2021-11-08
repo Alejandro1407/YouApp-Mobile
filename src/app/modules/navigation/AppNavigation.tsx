@@ -14,6 +14,7 @@ import {SearchScreen} from '@screens/SearchScreen';
 import AppPlayer from '../player/AppPlayer';
 import TrackPlayer from 'react-native-track-player';
 import UserScreen from '@screens/UserScreen';
+import ChangePasswordScreen from '@src/app/screens/ChangePasswordScreen';
 
 const AppNavigation = () => {
   const {authorization} = useContext(OAuth2Context);
@@ -48,6 +49,10 @@ const AppNavigation = () => {
             <Stack.Screen name="Music" component={MusicScreen} />
             <Stack.Screen name="Search" component={SearchScreen} />
             <Stack.Screen name="User" component={UserScreen} />
+            <Stack.Screen
+              name="ChangePassword"
+              component={ChangePasswordScreen}
+            />
           </>
         )}
       </Stack.Navigator>
@@ -58,7 +63,7 @@ const AppNavigation = () => {
 export default () => {
   return (
     <OAuth2ContextProvider>
-        <AppNavigation />
+      <AppNavigation />
     </OAuth2ContextProvider>
   );
 };
