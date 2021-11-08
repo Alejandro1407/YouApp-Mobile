@@ -1,5 +1,6 @@
 export default {
   BACKGROUND: '#220037',
+  BAKCGROUND1: '#001b37',
   PRIMARY: '#ED1BA3',
   ACCENT:'#22DDF2',
   GRAY1: '#090909',

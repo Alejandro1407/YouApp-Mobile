@@ -10,9 +10,10 @@ import {NavigationContainer} from '@react-navigation/native';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {OAuth2ContextProvider} from '../auth/OAuth2ContextProvider';
-import {SearchScreen} from '@src/app/screens/SearchScreen';
+import {SearchScreen} from '@screens/SearchScreen';
 import AppPlayer from '../player/AppPlayer';
 import TrackPlayer from 'react-native-track-player';
+import UserScreen from '@screens/UserScreen';
 
 const AppNavigation = () => {
   const {authorization} = useContext(OAuth2Context);
@@ -43,9 +44,10 @@ const AppNavigation = () => {
           </>
         ) : (
           <>
-            <Stack.Screen name="Search" component={SearchScreen} />
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Music" component={MusicScreen} />
+            <Stack.Screen name="Search" component={SearchScreen} />
+            <Stack.Screen name="User" component={UserScreen} />
           </>
         )}
       </Stack.Navigator>
@@ -56,7 +58,7 @@ const AppNavigation = () => {
 export default () => {
   return (
     <OAuth2ContextProvider>
-      <AppNavigation />
+        <AppNavigation />
     </OAuth2ContextProvider>
   );
 };

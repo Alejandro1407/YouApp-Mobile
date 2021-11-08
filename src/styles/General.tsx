@@ -103,7 +103,7 @@ const modalStyles = StyleSheet.create({
     borderRadius: 10,
     flex: 1,
   },
-  button: {
+  button1: {
     width: 250,
     height: 60,
     backgroundColor: 'rgba(52, 52, 52, 0)',
@@ -147,6 +147,57 @@ const modalStyles = StyleSheet.create({
     marginVertical: 10,
     width: 250,
     color: Colors.PRIMARY,
+  },
+  titleView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: Colors.BAKCGROUND1,
+    borderRadius: 20,
+    padding: 15,
+    shadowColor: '#000',
+
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });
 
@@ -209,12 +260,13 @@ const homeStyles = StyleSheet.create({
 
   playBox: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginLeft: 25,
     marginTop: 20,
+    marginRight: 30,
   },
 
   playText: {
-    marginLeft: 40,
-    marginRight: 248,
     color: Colors.GRAY5,
     fontFamily: 'Poppins-Medium',
     fontSize: 20,
@@ -223,19 +275,16 @@ const homeStyles = StyleSheet.create({
   palyArrow: {
     marginTop: 9,
   },
-
+  playlistBoxes: {
+    flexDirection: 'row',
+    marginTop: 10,
+  },
   searchBoxes: {
     marginTop: 15,
     flexDirection: 'row',
     justifyContent: 'center',
     flexWrap: 'wrap',
   },
-
-  playlistBoxes: {
-    flexDirection: 'row',
-    marginTop: 16,
-  },
-
   playlistTitle: {
     fontSize: 16,
     fontFamily: 'Poppins-SemiBold',
@@ -361,4 +410,11 @@ const musicStyles = StyleSheet.create({
   },
 });
 
-export {loginStyles, splashStyles, modalStyles, homeStyles, musicStyles};
+export {
+  loginStyles,
+  splashStyles,
+  modalStyles,
+  homeStyles,
+  musicStyles,
+  modalStyles,
+};

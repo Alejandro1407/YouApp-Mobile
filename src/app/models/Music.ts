@@ -12,4 +12,5 @@ export interface Music {
   status: Status;
   genre: Genre;
   user: User;
+  likes?: boolean;
 }

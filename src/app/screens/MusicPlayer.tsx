@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -9,6 +10,8 @@ import {
   Dimensions,
   TouchableOpacity,
   ToastAndroid,
+  Alert,
+  Modal,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
@@ -22,14 +25,26 @@ import TrackPlayer, {
   useTrackPlayerEvents,
 } from 'react-native-track-player';
 import Colors from '@src/styles/Colors';
-import AppPlayer from '../modules/player/AppPlayer';
+import AppPlayer from '@modules/player/AppPlayer';
+import {WebClient} from '@modules/web-client/WebClient';
+import {OAuth2Context} from '@environment/OAuth2Context';
+import {homeStyles, modalStyles} from '@src/styles/General';
+import {Playlist} from '../models/Playlist';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const {width} = Dimensions.get('window');
 
 const MusicScreen = () => {
   let playbackState = usePlaybackState();
+  const placeholder = require('@assets/favicon.png');
   const {position, duration} = useProgress();
-  const [track, setTrack] = useState<Track>();
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [playlist, setPlaylist] = useState<Playlist[]>([]);
+  const [track, setTrack] = useState<Track & {liked: boolean; id: number}>();
+  const [enabled, setEnabled] = useState<boolean>(false);
+  const [adding, setAdding] = useState<boolean>(false);
+  const {authorization} = useContext(OAuth2Context);
+  const web_client = new WebClient({host: 'http://192.168.101.2', port: 8085});
 
   const setup = async () => {
     let cTrack: number = await TrackPlayer.getCurrentTrack();
@@ -38,8 +53,75 @@ const MusicScreen = () => {
     }
     let cT: Track = await TrackPlayer.getTrack(cTrack);
     if (cT !== undefined) {
+      console.log(cT);
       setTrack(cT);
     }
+  };
+
+  const addToPlaylist = (p: Playlist) => {
+    if (track === undefined) {
+      ToastAndroid.show("You're not listing anything", ToastAndroid.SHORT);
+      return;
+    }
+    if (!adding) {
+      setAdding(true);
+      web_client
+        .post(
+          '/v1/storage/music/playlist',
+          JSON.stringify({
+            musicId: track.id,
+            playlistId: p.id,
+          }),
+          undefined,
+          {
+            Authorization: 'Bearer ' + authorization.access_token,
+          },
+        )
+        .then(() => {
+          setModalVisible(false);
+          ToastAndroid.show(
+            track.title + ' has been added to: ' + p.title,
+            ToastAndroid.LONG,
+          );
+        })
+        .catch(error => {
+          console.log(error);
+          ToastAndroid.show('Failed to add to playlist', ToastAndroid.SHORT);
+        })
+        .finally(() => setAdding(false));
+    } else {
+      ToastAndroid.show('Please wait...', ToastAndroid.SHORT);
+    }
+  };
+
+  const renderPlaylist = () => {
+    return playlist.length > 0 ? (
+      playlist.map(p => (
+        <TouchableOpacity key={p.id} onPress={() => addToPlaylist(p)}>
+          <Text style={homeStyles.playlistTitle}>{p.title}</Text>
+          <Text style={homeStyles.playlistText}>{p.user.fullName}</Text>
+        </TouchableOpacity>
+      ))
+    ) : (
+      <View style={{alignItems: 'center'}}>
+        <Image
+          source={require('@assets/loading.gif')}
+          style={{height: 100, width: 100}}
+        />
+      </View>
+    );
+  };
+
+  const getPlaylist = async () => {
+    web_client
+      .get<Playlist[]>('/v1/storage/music/playlist', undefined, {
+        Authorization: 'Bearer ' + authorization.access_token,
+      })
+      .then(p => setPlaylist(p))
+      .catch(error => {
+        console.log(error);
+        ToastAndroid.show('Failed to retrieve playlist', ToastAndroid.SHORT);
+      });
   };
 
   const events: Event[] = [
@@ -61,9 +143,11 @@ const MusicScreen = () => {
 
   useEffect(() => {
     setup();
+    getPlaylist();
   }, []);
 
   const play = async () => {
+    console.log(track);
     if (playbackState === State.Playing) {
       console.log('pausing');
       await TrackPlayer.pause();
@@ -89,6 +173,40 @@ const MusicScreen = () => {
     }
   };
 
+  const like = async () => {
+    if (track !== undefined) {
+      setEnabled(true);
+      web_client
+        .get('/v1/storage/music/like/' + track.id, undefined, {
+          Authorization: 'Bearer ' + authorization.access_token,
+        })
+        .then(() => (track.liked = true))
+        .catch(error => {
+          console.log(error);
+          ToastAndroid.show('Failed to like this song', ToastAndroid.SHORT);
+        })
+        .finally(() => setEnabled(false));
+      console.log('liked');
+    }
+  };
+
+  const dislike = async () => {
+    if (track !== undefined) {
+      setEnabled(true);
+      web_client
+        .get('/v1/storage/music/dislike/' + track.id, undefined, {
+          Authorization: 'Bearer ' + authorization.access_token,
+        })
+        .then(() => (track.liked = false))
+        .catch(error => {
+          console.log(error);
+          ToastAndroid.show('Failed to dislike this song', ToastAndroid.SHORT);
+        })
+        .finally(() => setEnabled(false));
+      console.log('unliked');
+    }
+  };
+
   return (
     <>
       <StatusBar backgroundColor={Colors.BACKGROUND} />
@@ -96,10 +214,13 @@ const MusicScreen = () => {
         <View style={styles.maiContainer}>
           <View style={styles.artworkWrapper}>
             <Image
-              source={{
-                uri:
-                  track === undefined ? undefined : track.artwork?.toString(),
-              }}
+              source={
+                track === undefined
+                  ? placeholder
+                  : {
+                      uri: track.artwork?.toString(),
+                    }
+              }
               style={styles.artworkImg}
             />
           </View>
@@ -156,26 +277,59 @@ const MusicScreen = () => {
               />
             </TouchableOpacity>
           </View>
-        </View>
-        <View style={styles.bottomContainer}>
           <View style={styles.bottomControls}>
-            <TouchableOpacity onPress={() => {}}>
-              <Ionicons name="heart-outline" size={30} color={Colors.PRIMARY} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {}}>
-              <Ionicons name="repeat" size={30} color={Colors.PRIMARY} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {}}>
-              <Ionicons name="share-outline" size={30} color={Colors.PRIMARY} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity
+              disabled={enabled}
+              onPress={() => {
+                console.log(track?.liked);
+                track?.liked === undefined || track.liked === false
+                  ? like()
+                  : dislike();
+              }}>
               <Ionicons
-                name="ellipsis-horizontal-outline"
+                name={
+                  track?.liked === undefined || track.liked === false
+                    ? 'heart-outline'
+                    : 'heart'
+                }
                 size={30}
                 color={Colors.PRIMARY}
               />
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+              <Ionicons name="add" size={30} color={Colors.PRIMARY} />
+            </TouchableOpacity>
           </View>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+              setModalVisible(!modalVisible);
+            }}>
+            <View style={modalStyles.centeredView}>
+              <View style={modalStyles.modalView}>
+                <View style={modalStyles.titleView}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 18,
+                      fontFamily: 'Poppins-Bold',
+                    }}>
+                    Agregar a lista de reproducción
+                  </Text>
+                  <Ionicons
+                    name="close"
+                    size={22}
+                    color={'white'}
+                    onPress={() => setModalVisible(false)}
+                  />
+                </View>
+                <ScrollView>{renderPlaylist()}</ScrollView>
+              </View>
+            </View>
+          </Modal>
         </View>
       </SafeAreaView>
     </>
@@ -264,7 +418,7 @@ const styles = StyleSheet.create({
 
   bottomControls: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     width: '80%',
   },
 });

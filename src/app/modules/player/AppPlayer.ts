@@ -1,6 +1,6 @@
 import {Music} from '@models/Music';
 import {ToastAndroid} from 'react-native';
-import TrackPlayer, {Capability, State} from 'react-native-track-player';
+import TrackPlayer, {Capability, State, Track} from 'react-native-track-player';
 
 class AppPlayer {
   static initializePlayer(): Promise<void> {
@@ -32,16 +32,23 @@ class AppPlayer {
     });
   }
 
-  static addMusic(song: Music): Promise<boolean> {
+  static addMusic(...songs: Music[]): Promise<boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
       try {
-        await TrackPlayer.add({
-          url: song.uri,
-          title: song.title,
-          artwork: song.photo,
-          artist: song.user.fullName,
-          duration: song.duration,
-        });
+        await TrackPlayer.add(
+          songs.map(
+            song =>
+              <Track>{
+                url: song.uri,
+                title: song.title,
+                artwork: song.photo,
+                artist: song.user.fullName,
+                duration: song.duration,
+                liked: song.likes,
+                id: song.id,
+              },
+          ),
+        );
         const state = await TrackPlayer.getState();
         if (state !== State.Playing) {
           await TrackPlayer.play();
