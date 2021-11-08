@@ -221,7 +221,7 @@ const HomeScreen = (props: any) => {
             <View>
               <View style={homeStyles.playBox}>
                 <Text style={homeStyles.playText}>Listas de reproducción</Text>
-                <Ionicons
+                <Ionicons onPress={() => setModalVisible(true)}
                   style={homeStyles.palyArrow}
                   name="add"
                   size={15}

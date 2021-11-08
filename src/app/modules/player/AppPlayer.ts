@@ -35,6 +35,10 @@ class AppPlayer {
   static addMusic(...songs: Music[]): Promise<boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
       try {
+        if (songs.length === 0) {
+          ToastAndroid.show('No sounds to be added', ToastAndroid.SHORT);
+          resolve(false);
+        }
         await TrackPlayer.add(
           songs.map(
             song =>

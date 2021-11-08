@@ -4,7 +4,7 @@ interface OAuth2Environment {
 }
 
 const DefaultOAuth2Enviroment: OAuth2Environment = {
-  host: 'http://192.168.0.17',
+  host: 'http://192.168.101.2',
   port: 8082,
 };
 
