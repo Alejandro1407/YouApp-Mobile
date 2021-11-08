@@ -12,7 +12,6 @@ import {
 
 import Colors from '@src/styles/Colors';
 import {homeStyles} from '@src/styles/General';
-import colors from '@src/styles/Colors';
 
 import DocumentPicker, {
   DirectoryPickerResponse,
@@ -21,9 +20,7 @@ import DocumentPicker, {
   types,
 } from 'react-native-document-picker';
 import {
-  CameraOptions,
   ImageLibraryOptions,
-  launchCamera,
   launchImageLibrary,
 } from 'react-native-image-picker';
 import { Navbar } from './Navbar';
@@ -32,8 +29,10 @@ export default function UploadScreen() {
 
   const [nameS, setNameS]= useState('');
   const [nameArt, setNameArt]= useState('');
-  const [minute, setMinute]= useState(null);
-  const [second, setSecond]= useState(null);
+  const [minute, setMinute]= useState('');
+  const [second, setSecond]= useState('');
+  const [duration, setDuration]= useState(null);
+
   // Image file
   const [state, setState] = useState([
     {filePath: ''},
@@ -63,6 +62,30 @@ export default function UploadScreen() {
       throw err;
     }
   };
+
+  // Music function
+
+  async function chooseFile() {
+    // Pick a single file
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+      })
+      console.log(
+        res.uri,
+        res.type, // mime type
+        res.name,
+        res.size,
+        res.file
+      )
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        // User cancelled the picker, exit any dialogs or menus and move on
+      } else {
+        throw err
+      }
+    }
+  }
 
   // Image select
   const imageGalleryLaunch = () => {
@@ -108,44 +131,14 @@ export default function UploadScreen() {
     }
   };
 
-  const onChangeMinute = (text: string) => {
-    let newText = '';
-    let numbers = '0123456789';
-
-    for (var i=0; i < text.length; i++) {
-      if(numbers.indexOf(text[i]) > -1 ) {
-          newText = newText + text[i];
-      }
-      else {
-          // your call back function
-          console.log("please enter numbers only");
-      }
-  }
-    setMinute({ myNumber: newText });
-  }
-
-  const onChangeSecond = (text: string) => {
-    let newText = '';
-    let numbers = '0123456789';
-
-    for (var i=0; i < text.length; i++) {
-      if(numbers.indexOf(text[i]) > -1 ) {
-          newText = newText + text[i];
-      }
-      else {
-          // your call back function
-          console.log("please enter numbers only");
-      }
-    }
-
-    setSecond({ myNumber: newText });
-  }
-
   const data = () => {
-    console.log(nameS);
-    console.log(nameArt);
-    console.log(minute);
-    console.log(second);
+    const duration = (parseInt(minute)* 60) + parseInt(second);
+    console.log("Cancion", nameS);
+    console.log("Artista", nameArt);
+    console.log("Minuto",  parseInt(minute));
+    console.log("Segundo", parseInt(second));
+    console.log("Duracion", duration );
+    console.log("Imagen base64: ", base64Photo);
   }
 
   return (
@@ -178,42 +171,27 @@ export default function UploadScreen() {
 
           <View style={{flexDirection: 'row',}}>
             <TextInput
-              keyboardType='numeric'
+              keyboardType='default'
               placeholder='Minutos'
               style={[uploadStyle.inputContainers, {width: 150, marginRight: 50,}]}
               placeholderTextColor={Colors.ACCENT}
-              // value={minute.myNumber}
-              // onChangeText={(text) => onChangeMinute(text)}
+              value={minute}
+              onChangeText={setMinute}
             />
             <TextInput
               placeholder='Segundos'
-              keyboardType='numeric'
+              keyboardType='default'
               style={[uploadStyle.inputContainers, {width: 150,}]}
               placeholderTextColor={Colors.ACCENT}
-              // value={second.myNumber}
-              // onChange={(text) => onChangeSecond(text)}
+              value={second}
+              onChangeText={setSecond}
             />
-          </View>
-
-          <View>
-            <TouchableOpacity 
-              style={{alignItems: 'center', marginTop: 15,}}
-              onPress={data}
-            >
-              <Text style={{color: Colors.GRAY5, fontSize: 18}}>DATA</Text>
-            </TouchableOpacity>
           </View>
 
           <View style={{marginTop: 15}}>
             <TouchableOpacity
               style={uploadStyle.inputImage}
-              onPress={() => {
-                DocumentPicker.pick({
-                  type: types.audio,
-                })
-                  .then(setResult)
-                  .catch(handleError);
-              }}>
+              onPress={chooseFile}>
               <Text style={uploadStyle.text}>Seleccionar Cancion</Text>
             </TouchableOpacity>
           </View>
@@ -227,6 +205,14 @@ export default function UploadScreen() {
               <Text style={uploadStyle.text}>Seleccionar Foto</Text>
             </TouchableOpacity>
           </View>
+        </View>
+        <View>
+          <TouchableOpacity 
+            style={{alignItems: 'center', marginTop: 15,}}
+            onPress={data}
+          >
+            <Text style={{color: Colors.GRAY5, fontSize: 18}}>DATA</Text>
+          </TouchableOpacity>
         </View>
       </View>
       <Navbar />
