@@ -4,7 +4,6 @@ import React, {useContext, useEffect, useState} from 'react';
 import {
   Text,
   View,
-  TextInput,
   ScrollView,
   Image,
   StatusBar,
@@ -19,7 +18,8 @@ import {OAuth2Context} from '../environment/OAuth2Context';
 import {WebClient} from '../modules/web-client/WebClient';
 import {Music} from '../models/Music';
 import AppPlayer from '../modules/player/AppPlayer';
-import TrackPlayer, { State } from 'react-native-track-player';
+import { Navbar } from './Navbar';
+import TrackPlayer from 'react-native-track-player';
 
 const HomeScreen = (props: any) => {
   const {authorization,setAuthorization}  = useContext(OAuth2Context);
@@ -29,7 +29,6 @@ const HomeScreen = (props: any) => {
   const web_client = new WebClient({host:'http://192.168.101.2',port:8085});
 
   const setup = async () => {
-    await AppPlayer.initializePlayer();
     web_client
     .get<Music[]>('/v1/storage/music/',undefined
     ,{
@@ -39,13 +38,13 @@ const HomeScreen = (props: any) => {
       setSongs(s);
     })
     .catch(error => {
-      console.log('got error');
       console.log(error);
       ToastAndroid.show('Failed to retrieve music ' + error.message , ToastAndroid.SHORT);
     });
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await TrackPlayer.stop();
     setAuthorization({
       loggedIn: false,
     });
@@ -60,33 +59,29 @@ const HomeScreen = (props: any) => {
     navigation.navigate(routeName);
   };
 
-  const addQueue = async (song: Music) => {
-    //console.log(song);
-    await TrackPlayer.add({
-      url: song.uri,
-      title: song.title,
-      artwork: song.photo,
-      artist: song.user.fullName,
-      duration: song.duration,
+  const addSong = (music: Music) => {
+    AppPlayer.addMusic(music).then(f => {
+      if (f) {
+        goToScreen('Music');
+      }
     });
-    const state = await TrackPlayer.getState();
-    if (state !== State.Playing){
-      TrackPlayer.play().then(() => goToScreen('Music'));
-    } else {
-      ToastAndroid.show('Song has been added to queue',ToastAndroid.SHORT);
-    }
   };
 
   const renderItems = () => {
-    return songs !== undefined ?
+    return songs.length > 0  ?
       songs.map(s => (
-      <TouchableOpacity style={{marginLeft: 24}} key={s.id} onPress={() => addQueue(s)}>
-        <Image source={{uri: s.photo}} style={{width: 200, height: 200}} />
+      <TouchableOpacity style={{marginLeft: 24}} key={s.id} onPress={() => addSong(s)}>
+        <Image source={{uri: s.photo}} style={{width: 150, height: 150}} />
         <Text style={homeStyles.playlistTitle}>{s.title}</Text>
         <Text style={homeStyles.playlistText}>{s.user.fullName}</Text>
       </TouchableOpacity> )
       )
-    : <Text>Cargando</Text>;
+    : (<View style={{alignItems: 'center'}}>
+        <Image
+          source={require('@assets/loading.gif')}
+          style={{height: 100, width: 100}}
+          />
+      </View>);
   };
 
     return (
@@ -103,22 +98,9 @@ const HomeScreen = (props: any) => {
               color={Colors.ACCENT}
             />
           </View>
-          <View style={homeStyles.inputSearch}>
-            <Ionicons
-              style={homeStyles.iconSearch}
-              name="search-outline"
-              size={20}
-              color={Colors.GRAY3}
-            />
-            <TextInput
-              placeholder="Song or artist"
-              placeholderTextColor={Colors.GRAY3}
-              style={homeStyles.textInput}
-            />
-          </View>
           <View>
             <View style={homeStyles.playBox}>
-              <Text style={homeStyles.playText}>Playlists</Text>
+              <Text style={homeStyles.playText}>Favoritas</Text>
               <Ionicons
                 style={homeStyles.palyArrow}
                 name="chevron-forward-outline"
@@ -126,13 +108,23 @@ const HomeScreen = (props: any) => {
                 color={Colors.ACCENT}
               />
             </View>
-            <ScrollView horizontal>
+            <ScrollView horizontal contentContainerStyle={{flexGrow: 1, justifyContent:'center'}}>
               <View style={homeStyles.playlistBoxes}>
-                {renderItems()}
+              {renderItems()}
               </View>
             </ScrollView>
           </View>
-          <View>
+        </View>
+        <Navbar />
+      </>
+    );
+};
+
+export {HomeScreen};
+
+/*
+
+<View>
             <View style={[homeStyles.playBox, {marginTop: 24}]}>
               <Text style={homeStyles.playText}>Favorite</Text>
               <Ionicons
@@ -187,17 +179,6 @@ const HomeScreen = (props: any) => {
               </View>
             </View>
           </View>
-          <View>
-            <Ionicons
-              name="musical-notes-outline"
-              size={30}
-              color={Colors.ACCENT}
-              onPress={() => goToScreen('Music')}
-            />
-          </View>
-        </View>
-      </>
-    );
-};
 
-export {HomeScreen};
+
+*/

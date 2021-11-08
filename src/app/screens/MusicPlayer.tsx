@@ -33,6 +33,9 @@ const MusicScreen = () => {
 
   const setup = async () => {
     let cTrack: number = await TrackPlayer.getCurrentTrack();
+    if (cTrack === null) {
+      return;
+    }
     let cT: Track = await TrackPlayer.getTrack(cTrack);
     if (cT !== undefined) {
       setTrack(cT);

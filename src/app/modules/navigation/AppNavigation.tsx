@@ -4,16 +4,30 @@ import {MusicScreen} from '@screens/MusicPlayer';
 import {Login} from '@modules/login/Login';
 import Register from '../register/Register';
 import recoverPasswordScreen from '../recover/Recover';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {OAuth2Context} from '@src/app/environment/OAuth2Context';
 import {NavigationContainer} from '@react-navigation/native';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {OAuth2ContextProvider} from '../auth/OAuth2ContextProvider';
+import {SearchScreen} from '@src/app/screens/SearchScreen';
+import AppPlayer from '../player/AppPlayer';
+import TrackPlayer from 'react-native-track-player';
 
 const AppNavigation = () => {
   const {authorization} = useContext(OAuth2Context);
   const Stack = createNativeStackNavigator();
+
+  const setup = async () => {
+    await AppPlayer.initializePlayer();
+  };
+
+  useEffect(() => {
+    setup();
+    return () => {
+      TrackPlayer.destroy();
+    };
+  }, []);
 
   return (
     <NavigationContainer>
@@ -29,6 +43,7 @@ const AppNavigation = () => {
           </>
         ) : (
           <>
+            <Stack.Screen name="Search" component={SearchScreen} />
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Music" component={MusicScreen} />
           </>

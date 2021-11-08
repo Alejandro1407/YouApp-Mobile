@@ -81,13 +81,20 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    //noinspection GradleDynamicVersion
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+
+    implementation "com.facebook.react:react-native:+"
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
-    implementation 'com.facebook.fresco:fresco:2.0.0'
-    implementation 'com.facebook.fresco:animated-gif:2.0.0'
+    implementation ('com.facebook.fresco:fresco:2.6.0') {
+      exclude group: 'com.facebook.soloader', module: 'soloader'
+      exclude group: 'com.facebook.fresco', module: 'soloader'
+      exclude group: 'com.facebook.fresco', module: 'nativeimagefilters'
+      exclude group: 'com.facebook.fresco', module: 'nativeimagetranscoder'
+      exclude group: 'com.facebook.fresco', module: 'memory-type-native'
+      exclude group: 'com.facebook.fresco', module: 'imagepipeline-native'
+    }
+    implementation 'com.facebook.fresco:animated-gif:2.6.0'
     implementation "com.google.gms:google-services:3.2.1"
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {

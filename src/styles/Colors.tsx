@@ -1,6 +1,6 @@
 export default {
   BACKGROUND: '#220037',
-  PRIMARY: '#ED1BA3', 
+  PRIMARY: '#ED1BA3',
   ACCENT:'#22DDF2',
   GRAY1: '#090909',
   GRAY2: '#464646',
@@ -11,5 +11,5 @@ export default {
   LINEARGRADIENT2:['#22DDF2', '#D91193'],
   WHITE: '#F2E1C2',
   BORDER: '#00CB34',
-  INPUTSER: '#361E60'
+  INPUTSER: '#361E60',
 };

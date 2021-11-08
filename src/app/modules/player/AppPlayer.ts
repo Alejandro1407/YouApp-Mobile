@@ -1,8 +1,8 @@
-import TrackPlayer, {Capability, Track} from 'react-native-track-player';
+import {Music} from '@models/Music';
+import {ToastAndroid} from 'react-native';
+import TrackPlayer, {Capability, State} from 'react-native-track-player';
 
 class AppPlayer {
-  static selectedTrack: Track | null;
-
   static initializePlayer(): Promise<void> {
     return new Promise<void>(async (resolve, reject) => {
       try {
@@ -27,6 +27,30 @@ class AppPlayer {
         resolve();
       } catch (e) {
         console.log(e);
+        reject(e);
+      }
+    });
+  }
+
+  static addMusic(song: Music): Promise<boolean> {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        await TrackPlayer.add({
+          url: song.uri,
+          title: song.title,
+          artwork: song.photo,
+          artist: song.user.fullName,
+          duration: song.duration,
+        });
+        const state = await TrackPlayer.getState();
+        if (state !== State.Playing) {
+          await TrackPlayer.play();
+          resolve(true);
+        } else {
+          ToastAndroid.show('Song has been added to queue', ToastAndroid.SHORT);
+          resolve(false);
+        }
+      } catch (e) {
         reject(e);
       }
     });

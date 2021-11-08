@@ -1,9 +1,8 @@
 import {Dimensions, StyleSheet} from 'react-native';
 import Colors from './Colors';
 
-const {width,height} = Dimensions.get('screen');
+const {width, height} = Dimensions.get('screen');
 
-//Estilos para SplashScreen
 const splashStyles = StyleSheet.create({
   image: {
     flex: 1,
@@ -155,6 +154,8 @@ const homeStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.BACKGROUND,
+    width: width,
+    height: height,
   },
 
   Header: {
@@ -184,20 +185,26 @@ const homeStyles = StyleSheet.create({
     marginHorizontal: 24,
     marginTop: 20,
     width: width * 0.9,
-    height: height * 0.05
+    height: height * 0.05,
   },
-
   iconSearch: {
-   // marginTop: 15,
-    // marginHorizontal: 17.67,
+    marginTop: 7,
+    marginHorizontal: 10,
   },
-
+  label: {
+    fontSize: 20,
+    color: 'white',
+    fontFamily: 'Poppins-Medium',
+  },
   textInput: {
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingLeft: 0,
     color: Colors.GRAY3,
     fontFamily: 'Poppins-Medium',
-    fontSize: 14,
-    lineHeight: 20,
-    width: 275,
+    fontSize: 18,
+    lineHeight: 25,
+    width: width * 0.9,
   },
 
   playBox: {
@@ -215,6 +222,13 @@ const homeStyles = StyleSheet.create({
 
   palyArrow: {
     marginTop: 9,
+  },
+
+  searchBoxes: {
+    marginTop: 15,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
   },
 
   playlistBoxes: {
@@ -260,4 +274,91 @@ const homeStyles = StyleSheet.create({
   },
 });
 
-export {loginStyles, splashStyles, modalStyles, homeStyles};
+const musicStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#220037',
+  },
+
+  maiContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  artworkWrapper: {
+    width: 300,
+    height: 340,
+    marginBottom: 25,
+
+    shadowColor: '#ccc',
+    shadowOffset: {
+      width: 5,
+      height: 5,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+
+  artworkImg: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 15,
+  },
+
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'center',
+    color: Colors.ACCENT,
+  },
+
+  artist: {
+    fontSize: 16,
+    fontWeight: '200',
+    textAlign: 'center',
+    color: Colors.ACCENT,
+  },
+
+  progressContainer: {
+    width: 350,
+    height: 40,
+    marginTop: 25,
+    flexDirection: 'row',
+  },
+
+  progressLabelContainer: {
+    width: 320,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+
+  ProgressLabelTxt: {
+    color: Colors.GRAY5,
+  },
+
+  musicControlls: {
+    flexDirection: 'row',
+    width: '60%',
+    justifyContent: 'space-between',
+    marginTop: 5,
+  },
+
+  bottomContainer: {
+    borderTopColor: Colors.GRAY2,
+    borderTopWidth: 1,
+    width: width,
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+
+  bottomControls: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+  },
+});
+
+export {loginStyles, splashStyles, modalStyles, homeStyles, musicStyles};
