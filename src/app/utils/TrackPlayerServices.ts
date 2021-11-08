@@ -1,6 +1,16 @@
 import TrackPlayer, {Event} from 'react-native-track-player';
 
 module.exports = async () => {
+  TrackPlayer.addEventListener(Event.RemotePrevious, () =>
+    TrackPlayer.skipToPrevious(),
+  );
   TrackPlayer.addEventListener(Event.RemotePlay, () => TrackPlayer.play());
   TrackPlayer.addEventListener(Event.RemotePause, () => TrackPlayer.pause());
+  TrackPlayer.addEventListener(Event.RemoteNext, () =>
+    TrackPlayer.skipToNext(),
+  );
+  TrackPlayer.addEventListener(
+    Event.RemoteSeek,
+    (evt: {[key: string]: number}) => TrackPlayer.seekTo(evt.position),
+  );
 };

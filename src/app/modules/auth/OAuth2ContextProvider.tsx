@@ -29,6 +29,7 @@ const OAuth2ContextProvider = ({children}) => {
 
   const setAuthState = async (token: OAuth2Token) => {
     try {
+      console.log('Updating credentials');
       setCredentials(token);
       await keychain.setGenericPassword(USERNAME, JSON.stringify(token));
     } catch (error) {

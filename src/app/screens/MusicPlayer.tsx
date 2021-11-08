@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -12,55 +12,78 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
 //Styles
+import TrackPlayer, {
+  usePlaybackState,
+  State,
+  useProgress,
+  Track,
+  Event,
+  useTrackPlayerEvents,
+} from 'react-native-track-player';
 import Colors from '@src/styles/Colors';
-import colors from '@src/styles/Colors';
 import AppPlayer from '../modules/player/AppPlayer';
-import TrackPlayer, {usePlaybackState, State} from 'react-native-track-player';
 
 const {width} = Dimensions.get('window');
 
 const MusicScreen = () => {
-  const playbackState = usePlaybackState();
-  //const playbackState = State.Paused;
-  const position = 12;
-  const duration = 100;
+  let playbackState = usePlaybackState();
+  const {position, duration} = useProgress();
+  const [track, setTrack] = useState<Track>();
 
   const setup = async () => {
-    AppPlayer.initializePlayer();
-    await TrackPlayer.add({
-      url: 'http://10.0.40.48:9090/youapp/049d1e78-bebb-4541-835d-a86def2460d0_1636089824.mp3',
-      title: 'Sweather Weather',
-      album: 'Album 1',
-      duration: 100,
-    });
+    try {
+      await AppPlayer.initializePlayer();
+      await TrackPlayer.add([
+        {
+          url: 'http://192.168.101.2:9090/youapp/049d1e78-bebb-4541-835d-a86def2460d0_1636089824.mp3',
+          title: 'Sweather Weather',
+          artist: 'The Neighbourhood',
+          album: 'Album 1',
+          duration: 247.2,
+        },
+        {
+          url: 'http://192.168.101.2:9090/youapp/53603788-944c-4cc3-b39d-874436eff601_1636327932.mp3',
+          title: 'Lets Kill Tonight',
+          artist: 'Panic! At Disco',
+          album: 'Album 1',
+          duration: 199.8,
+        },
+      ]);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
-  console.log(playbackState);
+  useTrackPlayerEvents([Event.PlaybackTrackChanged], async event => {
+    if (event.type === Event.PlaybackTrackChanged && event.nextTrack != null) {
+      console.log(event);
+      const dd: Track = await TrackPlayer.getTrack(event.nextTrack);
+      setTrack(dd);
+    }
+  });
 
   useEffect(() => {
     setup();
-  });
+    return () => TrackPlayer.destroy();
+  }, []);
 
   const play = async () => {
-    //console.log('Current Track: ' + track);
-    await TrackPlayer.play();
-  };
-  /*
-  const play = async () => {
-    const state = await TrackPlayer.getState();
-    console.log('actual state' + state);
-    if (state === State.Playing) {
+    if (playbackState === State.Playing) {
       console.log('pausing');
       await TrackPlayer.pause();
-      setPlaying(false);
-      //this.isPlaying = false;
     } else {
       console.log('playing');
       await TrackPlayer.play();
-      setPlaying(true);
-      //this.isPlaying = true;
     }
-  };*/
+  };
+
+  const next = async () => {
+    await TrackPlayer.skipToNext();
+  };
+
+  const prev = async () => {
+    await TrackPlayer.skipToPrevious();
+  };
 
   return (
     <>
@@ -70,12 +93,12 @@ const MusicScreen = () => {
           <View style={styles.artworkWrapper}>
             <Image
               style={styles.artworkImg}
-              source={require('../../assets/good.jpg')}
+              source={require('@assets/good.jpg')}
             />
           </View>
           <View>
-            <Text style={styles.title}>Good Day</Text>
-            <Text style={styles.artist}>Navey</Text>
+            <Text style={styles.title}>{track?.title}</Text>
+            <Text style={styles.artist}>{track?.artist}</Text>
           </View>
           <View>
             <Slider
@@ -90,11 +113,15 @@ const MusicScreen = () => {
             />
           </View>
           <View style={styles.progressLabelContainer}>
-            <Text style={styles.ProgressLabelTxt}>0:00</Text>
-            <Text style={styles.ProgressLabelTxt}>3:31</Text>
+            <Text style={styles.ProgressLabelTxt}>
+              {AppPlayer.secondsToHHMMSS(position)}
+            </Text>
+            <Text style={styles.ProgressLabelTxt}>
+              {AppPlayer.secondsToHHMMSS(duration)}
+            </Text>
           </View>
           <View style={styles.musicControlls}>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={prev}>
               <Ionicons
                 name="play-skip-back-outline"
                 size={35}
@@ -113,7 +140,7 @@ const MusicScreen = () => {
                 color={Colors.PRIMARY}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={next}>
               <Ionicons
                 name="play-skip-forward-outline"
                 size={35}
@@ -186,14 +213,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     textAlign: 'center',
-    color: colors.ACCENT,
+    color: Colors.ACCENT,
   },
 
   artist: {
     fontSize: 16,
     fontWeight: '200',
     textAlign: 'center',
-    color: colors.ACCENT,
+    color: Colors.ACCENT,
   },
 
   progressContainer: {
@@ -210,7 +237,7 @@ const styles = StyleSheet.create({
   },
 
   ProgressLabelTxt: {
-    color: colors.GRAY5,
+    color: Colors.GRAY5,
   },
 
   musicControlls: {

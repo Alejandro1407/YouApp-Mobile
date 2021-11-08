@@ -4,7 +4,7 @@ interface WebClientProperties {
 }
 
 const DefaultWebClientProperties: WebClientProperties = {
-  host: 'http://10.0.40.48',
+  host: 'http://192.168.101.2',
   port: 8083,
 };
 

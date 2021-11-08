@@ -3,31 +3,34 @@ import TrackPlayer, {Capability, Track} from 'react-native-track-player';
 class AppPlayer {
   static selectedTrack: Track | null;
 
-  static initializePlayer = async () => {
-    try {
-      TrackPlayer.updateOptions({
-        stopWithApp: true,
-        capabilities: [
-          Capability.Play,
-          Capability.Pause,
-          Capability.Stop,
-          Capability.SeekTo,
-        ],
-        compactCapabilities: [
-          Capability.Play,
-          Capability.Pause,
-          Capability.Stop,
-          Capability.SeekTo,
-        ],
-      }).then();
-      TrackPlayer.setupPlayer({
-        backBuffer: 15,
-        playBuffer: 5,
-      }).then();
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  static initializePlayer(): Promise<void> {
+    return new Promise<void>(async (resolve, reject) => {
+      try {
+        await TrackPlayer.updateOptions({
+          stopWithApp: true,
+          capabilities: [
+            Capability.SkipToPrevious,
+            Capability.Play,
+            Capability.Pause,
+            Capability.SkipToNext,
+            Capability.SeekTo,
+          ],
+          compactCapabilities: [
+            Capability.SkipToPrevious,
+            Capability.Play,
+            Capability.Pause,
+            Capability.SkipToNext,
+            Capability.SeekTo,
+          ],
+        });
+        await TrackPlayer.setupPlayer();
+        resolve();
+      } catch (e) {
+        console.log(e);
+        reject(e);
+      }
+    });
+  }
 
   static secondsToHHMMSS = (seconds: number | string) => {
     // credits - https://stackoverflow.com/a/37096512
