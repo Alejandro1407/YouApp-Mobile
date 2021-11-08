@@ -24,7 +24,7 @@ import {WebClient} from '@modules/web-client/WebClient';
 import {OAuth2Context} from '@environment/OAuth2Context';
 
 import Colors from '@src/styles/Colors';
-import {homeStyles} from '@src/styles/General';
+import { homeStyles, loginStyles } from '@src/styles/General';
 import { Navbar } from './Navbar';
 
 export default function UploadScreen() {
@@ -109,6 +109,7 @@ export default function UploadScreen() {
   };
 
   const data = () => {
+    console.log('foto', base64Photo);
     if (nameS == '') {
       ToastAndroid.showWithGravity(
         'Ingrese un nombre de cancion',
@@ -232,12 +233,12 @@ export default function UploadScreen() {
             </View>
 
           </View>
-          <View>
+          <View style={{alignItems: 'center', marginTop: 35,}}>
             <TouchableOpacity 
-              style={{alignItems: 'center', marginTop: 15,}}
+              style={[loginStyles.btnTransparent, {padding: 10, width: 180, alignItems: 'center',}]}
               onPress={data}
             >
-              <Text style={{color: Colors.GRAY5, fontSize: 18}}>DATA</Text>
+              <Text style={{color: Colors.GRAY5, fontSize: 18}}>Subir cancion</Text>
             </TouchableOpacity>
           </View>
         </View>

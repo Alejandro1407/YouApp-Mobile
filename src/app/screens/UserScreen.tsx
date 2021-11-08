@@ -59,87 +59,100 @@ export default function UserScreen() {
             </Text>
           </View>
 
-          <View style={{alignItems: 'center'}}>{profileFoto()}</View>
-          <Text
-            style={{
-              color: colors.PRIMARY,
-              fontSize: 20,
-              fontFamily: 'Poppins-Bold',
-              marginBottom: 25,
-              letterSpacing: 2,
-              textAlign: 'center',
-            }}>
-            {user.username}
-          </Text>
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 20,
-              fontWeight: '600',
-              textAlign: 'center',
-              margin: 15,
-              flexDirection: 'column',
-            }}>
-            Nombre completo:
-          </Text>
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 20,
-              textAlign: 'center',
-              margin: 15,
-              flexDirection: 'column',
-            }}>
-            {user.fullName}
-          </Text>
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 20,
-              fontWeight: '600',
-              textAlign: 'center',
-              margin: 15,
-              flexDirection: 'column',
-            }}>
-            Email:
-          </Text>
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 20,
-              textAlign: 'center',
-              margin: 15,
-              flexDirection: 'column',
-            }}>
-            {user.email}
-          </Text>
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 20,
-              fontWeight: '600',
-              textAlign: 'center',
-              margin: 15,
-              flexDirection: 'column',
-            }}>
-            Birthday:
-          </Text>
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 20,
-              textAlign: 'center',
-              margin: 15,
-              flexDirection: 'column',
-            }}>
-            {user.birthday}
-          </Text>
-          <View style={{marginTop: 15, alignItems: 'center'}}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('ChangePassword')}
-              style={[loginStyles.btnTransparent, {padding: 15}]}>
-              <Text style={[loginStyles.btntxt]}>Cambiar Contraseña</Text>
-            </TouchableOpacity>
+          <View style={{marginTop: 50,}}>
+            <View style={{alignItems: 'center', marginTop: 20,}}>{profileFoto()}</View>
+            <Text
+              style={{
+                color: colors.PRIMARY,
+                fontSize: 20,
+                fontFamily: 'Poppins-Bold',
+                marginBottom: 25,
+                letterSpacing: 2,
+                textAlign: 'center',
+              }}>
+              {user.username}
+            </Text>
+            <View style={{flexDirection: 'row',}}>
+              <View style={{marginLeft: 15,}}>
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Poppins-SemiBold',
+                    marginTop: 15,
+                    flexDirection: 'column',
+                  }}
+                >
+                  Nombre completo:
+                </Text>
+
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Poppins-SemiBold',
+                    marginTop: 15,
+                    flexDirection: 'column',
+                  }}>
+                  Birthday:
+                </Text>
+
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontSize: 20,
+                    fontFamily: 'Poppins-SemiBold',
+                    marginTop: 15,
+                    flexDirection: 'column',
+                  }}>
+                  Email:
+                </Text>
+              </View>
+              <View>
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontSize: 18,
+                    fontFamily: 'Poppins-Thin',
+                    marginTop: 18,
+                    marginLeft: 15,
+                    flexDirection: 'column',
+                  }}>
+                  {user.fullName}
+                </Text>
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontSize: 18,
+                    fontFamily: 'Poppins-Thin',
+                    marginTop: 18,
+                    marginLeft: 15,
+                    flexDirection: 'column',
+                  }}>
+                  {user.birthday}
+                </Text>
+              </View>
+            </View>
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: 18,
+                fontFamily: 'Poppins-Thin',
+                marginTop: 10,
+                marginLeft: 15,
+                flexDirection: 'column',
+              }}
+            >
+                {user.email}
+            </Text>
+
+            <View style={{marginTop: 55, alignItems: 'center'}}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('ChangePassword')}
+                style={[loginStyles.btnTransparent, {padding: 15}]}>
+                <Text style={[loginStyles.btntxt]}>Cambiar Contraseña</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
         <Navbar/>
