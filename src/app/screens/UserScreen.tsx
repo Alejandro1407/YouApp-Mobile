@@ -11,14 +11,18 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 //Styles
-import {homeStyles} from '@src/styles/General';
+import {homeStyles, loginStyles} from '@src/styles/General';
 import Colors from '@src/styles/Colors';
 import {OAuth2Context} from '../environment/OAuth2Context';
 import { WebClient } from '../modules/web-client/WebClient';
 import colors from '@src/styles/Colors';
 import { User } from '../models/User.interface';
 
-export default function UserScreen() {
+
+
+export default function UserScreen(props: any) {
+
+    const {navigation} = props;
     // useEffect(function getUser(){
         
     //     web_client
@@ -34,7 +38,7 @@ export default function UserScreen() {
    
     const [user,setUser] = useState<User>({})
     const {authorization} = useContext(OAuth2Context);
-    const web_client = new WebClient({host: 'http://192.168.0.13', port: 8085});
+    const web_client = new WebClient({host: 'http://192.168.0.9', port: 8085});
     useEffect(()=> {
         web_client
         .get<User>('/v1/storage/me', undefined, {
@@ -65,6 +69,8 @@ export default function UserScreen() {
             );
     }
     };
+
+
     return(
         <>
             <StatusBar backgroundColor={Colors.BACKGROUND} />
@@ -91,6 +97,18 @@ export default function UserScreen() {
                 <Text style={{color: '#fff', fontSize: 20,textAlign:'center', margin: 15, flexDirection: 'column'}}>
                     { user.birthday}
                 </Text >
+            <View style={{marginTop: 15, alignItems:'center'}}>
+                <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}
+                style={[loginStyles.btnTransparent, {padding:15}]}
+                >
+                    <Text
+                    style={[
+                        loginStyles.btntxt,
+                    ]}>
+                    Cambiar Contraseña
+                    </Text>
+                </TouchableOpacity>
+            </View>
             </View>
         </>
     )

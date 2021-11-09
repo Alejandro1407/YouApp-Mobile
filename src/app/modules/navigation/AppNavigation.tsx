@@ -11,6 +11,7 @@ import {NavigationContainer} from '@react-navigation/native';
 
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {OAuth2ContextProvider} from '../auth/OAuth2ContextProvider';
+import ChangePasswordScreen from '@src/app/screens/ChangePasswordScreen';
 
 const AppNavigation = () => {
   const {authorization} = useContext(OAuth2Context);
@@ -32,7 +33,8 @@ const AppNavigation = () => {
           <>
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Music" component={MusicScreen} />
-            <Stack.Screen name="User" component={UserScreen}/>
+            <Stack.Screen name="User" component={UserScreen} />
+            <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
           </>
         )}
       </Stack.Navigator>
