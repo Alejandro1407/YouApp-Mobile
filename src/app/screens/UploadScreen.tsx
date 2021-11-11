@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Keyboard
 } from 'react-native';
 
 import Colors from '@src/styles/Colors';
@@ -19,10 +20,30 @@ import DocumentPicker, {
   isInProgress,
   types,
 } from 'react-native-document-picker';
+import {
+  CameraOptions,
+  ImageLibraryOptions,
+  launchCamera,
+  launchImageLibrary,
+} from 'react-native-image-picker';
 import { Navbar } from './Navbar';
 
 export default function UploadScreen() {
-  const [result, setResult] = React.useState<
+
+  const [nameS, setNameS]= useState('');
+  const [nameArt, setNameArt]= useState('');
+  const [minute, setMinute]= useState(null);
+  const [second, setSecond]= useState(null);
+  // Image file
+  const [state, setState] = useState([
+    {filePath: ''},
+    {fileData: '../resource/img/user.png'},
+    {fileUri: ''},
+  ]);
+  const [base64Photo, setBase64Photo] = useState('');
+  const [profile, setProfile] = useState(false);
+  // Document Music
+  const [result, setResult] = useState<
     Array<DocumentPickerResponse> | DirectoryPickerResponse | undefined | null
   >();
 
@@ -43,6 +64,90 @@ export default function UploadScreen() {
     }
   };
 
+  // Image select
+  const imageGalleryLaunch = () => {
+    let options: ImageLibraryOptions = {
+      selectionLimit: 1,
+      mediaType: 'photo',
+      includeBase64: true,
+      quality: 0.5,
+      maxWidth: 200,
+      maxHeight: 200,
+    };
+
+    launchImageLibrary(options, res => {
+      if (res.didCancel) {
+        console.log('User cancelled image picker');
+      } else {
+        setState({
+          filePath: res.assets[0].fileName,
+          base64: res.assets[0].base64,
+          fileUri: res.assets[0].uri,
+        });
+        setBase64Photo(res.assets[0].base64);
+        setProfile(true);
+      }
+    });
+  };
+
+  const chosseFoto = () => {
+    if (!profile) {
+      return (
+        <Image
+          style={uploadStyle.image}
+          source={require('@assets/favicon.png')}
+        />
+      );
+    } else {
+      return (
+        <Image
+          source={{uri: state.fileUri}}
+          style={uploadStyle.image}
+        />
+      );
+    }
+  };
+
+  const onChangeMinute = (text: string) => {
+    let newText = '';
+    let numbers = '0123456789';
+
+    for (var i=0; i < text.length; i++) {
+      if(numbers.indexOf(text[i]) > -1 ) {
+          newText = newText + text[i];
+      }
+      else {
+          // your call back function
+          console.log("please enter numbers only");
+      }
+  }
+    setMinute({ myNumber: newText });
+  }
+
+  const onChangeSecond = (text: string) => {
+    let newText = '';
+    let numbers = '0123456789';
+
+    for (var i=0; i < text.length; i++) {
+      if(numbers.indexOf(text[i]) > -1 ) {
+          newText = newText + text[i];
+      }
+      else {
+          // your call back function
+          console.log("please enter numbers only");
+      }
+    }
+
+    setSecond({ myNumber: newText });
+  }
+
+  const data = () => {
+    console.log(nameS);
+    console.log(nameArt);
+    console.log(minute);
+    console.log(second);
+  }
+
   return (
     <>
       <StatusBar backgroundColor={Colors.BACKGROUND} />
@@ -59,23 +164,46 @@ export default function UploadScreen() {
             placeholder="Nombre de Cancion"
             placeholderTextColor={Colors.ACCENT}
             style={uploadStyle.inputContainers}
+            value={nameS}
+            onChangeText={setNameS}
           />
           <TextInput
             keyboardType="default"
             placeholder="Nombre del artista"
             placeholderTextColor={Colors.ACCENT}
             style={uploadStyle.inputContainers}
+            value={nameArt}
+            onChangeText={setNameArt}
           />
 
-          <View style={uploadStyle.imageContainer}>
-            <Image
-              style={uploadStyle.image}
-              source={require('@assets/favicon.png')}
+          <View style={{flexDirection: 'row',}}>
+            <TextInput
+              keyboardType='numeric'
+              placeholder='Minutos'
+              style={[uploadStyle.inputContainers, {width: 150, marginRight: 50,}]}
+              placeholderTextColor={Colors.ACCENT}
+              // value={minute.myNumber}
+              // onChangeText={(text) => onChangeMinute(text)}
             />
-            <TouchableOpacity style={uploadStyle.inputImage}>
-              <Text style={uploadStyle.text}>Seleccionar Foto</Text>
+            <TextInput
+              placeholder='Segundos'
+              keyboardType='numeric'
+              style={[uploadStyle.inputContainers, {width: 150,}]}
+              placeholderTextColor={Colors.ACCENT}
+              // value={second.myNumber}
+              // onChange={(text) => onChangeSecond(text)}
+            />
+          </View>
+
+          <View>
+            <TouchableOpacity 
+              style={{alignItems: 'center', marginTop: 15,}}
+              onPress={data}
+            >
+              <Text style={{color: Colors.GRAY5, fontSize: 18}}>DATA</Text>
             </TouchableOpacity>
           </View>
+
           <View style={{marginTop: 15}}>
             <TouchableOpacity
               style={uploadStyle.inputImage}
@@ -87,9 +215,16 @@ export default function UploadScreen() {
                   .catch(handleError);
               }}>
               <Text style={uploadStyle.text}>Seleccionar Cancion</Text>
-              <Text style={{color: colors.GRAY5, fontSize: 18}} selectable>
-                Result: {JSON.stringify(result, null, 2)}
-              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={uploadStyle.imageContainer}>
+            {chosseFoto()}
+            <TouchableOpacity 
+              style={uploadStyle.inputImage}
+              onPress={imageGalleryLaunch}
+            >
+              <Text style={uploadStyle.text}>Seleccionar Foto</Text>
             </TouchableOpacity>
           </View>
         </View>
