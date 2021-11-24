@@ -1,6 +1,6 @@
 # YouApp-Mobile
 
-YouApp is a streaming app
+YouApp is a music streaming app
 
 App requires Backend develop in JAVA with Spring boot
 
